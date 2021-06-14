@@ -46,9 +46,9 @@ workflow {
         BLAST_NEGATIVE_STRAND(
             file(params.rrlquery, checkIfExists:true),
             BLAST_MAKEBLASTDB.out.db)
-        FILTER_BLAST_XML()
-        PFAM_SCAN()
-        ANNOTATION()
+        FILTER_BLAST_XML(BLAST_POSTIVE_STRAND.out.xml)
+        PFAM_SCAN(FILTER_BLAST_XML.out.fasta)
+        ANNOTATION(PFAM_SCAN.out.pfam_table.collect())
         DIVSUM()
 
 }

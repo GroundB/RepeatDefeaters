@@ -10,11 +10,11 @@ process FILTER_BLAST_XML {
     }
 
     input:
-    path blast_xml // list of files?
-    val prefix // prefix
+    path blast_xml // -outfmt 14 = Multiple-file BLAST XML2
+    val prefix // prefix - cclaro ?
 
     output:
-    path "", emit: xml
+    path "predicted.fasta", emit: fasta
 
     script:
     """
@@ -40,6 +40,6 @@ process FILTER_BLAST_XML {
             done
         fi
     done
-    cat *.plus.pre > ~/${prefix}.plus.predicted
+    cat *.plus.pre > ${prefix}.predicted.fasta
     """
 }

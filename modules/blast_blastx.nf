@@ -14,8 +14,8 @@ process BLAST_BLASTX {
     path db
 
     output:
-    path "*.blastx.txt" , emit: txt
-    path "*.version"    , emit: version
+    path "*.blastx_fmt14.xml" , emit: xml
+    path "*.version"          , emit: version
 
     script:
     """
@@ -23,7 +23,8 @@ process BLAST_BLASTX {
         -query $query \\
         -db $db \\
         $options.args \\
-        -out ${prefix}.blastx.txt
+        -outfmt 14 \\
+        -out ${prefix}.blastx_fmt14
     blastx -version | sed -e '/^blastx:/!d; s/^.*blastx: //' > blastx.version
     """
 
