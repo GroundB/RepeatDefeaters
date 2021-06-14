@@ -37,10 +37,15 @@ workflow {
 
         PFAM_TRANSPOSIBLE_ELEMENT_SEARCH(
             file(params.pfam_a_db, checkIfExists:true)
-            file(params.transposon_keywords),checkIfExists:true))
-        BLAST_MAKEBLASTDB()
-        BLAST_POSITIVE_STRAND()
-        BLAST_NEGATIVE_STRAND()
+            file(params.transposon_keywords, checkIfExists:true))
+        BLAST_MAKEBLASTDB(
+            file(params.protein_reference, checkIfExists:true))
+        BLAST_POSITIVE_STRAND(
+            file(params.rrlquery, checkIfExists:true),
+            BLAST_MAKEBLASTDB.out.db)
+        BLAST_NEGATIVE_STRAND(
+            file(params.rrlquery, checkIfExists:true),
+            BLAST_MAKEBLASTDB.out.db)
         FILTER_BLAST_XML()
         PFAM_SCAN()
         ANNOTATION()
