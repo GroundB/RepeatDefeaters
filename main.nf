@@ -35,12 +35,14 @@ workflow {
             .ifEmpty { exit 1, "Cannot find reads from ${params.samples}!\n" }
             .set { readpairs }
 
+        PFAM_TRANSPOSIBLE_ELEMENT_SEARCH(
+            file(params.pfam_a_db, checkIfExists:true)
+            file(params.transposon_keywords),checkIfExists:true))
         BLAST_MAKEBLASTDB()
         BLAST_POSITIVE_STRAND()
         BLAST_NEGATIVE_STRAND()
         FILTER_BLAST_XML()
         PFAM_SCAN()
-        PFAM_TRANSPOSIBLE_ELEMENT_SEARCH()
         ANNOTATION()
         DIVSUM()
 
