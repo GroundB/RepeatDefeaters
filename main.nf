@@ -16,6 +16,7 @@ if(workflow.profile == "uppmax" && !params.project){
     exit 1, "Please provide a SNIC project number ( --project )!\n"
 }
 
+include { BLAST_MAKEBLASTDB                     } from './modules/blast_makeblastdb', addParams(options:parmas.modules['blast_makeblastdb'])
 include { BLAST_BLASTX as BLAST_POSITIVE_STRAND } from './modules/blast_blastx'     , addParams(options:params.modules['blast_positive_strand'])
 include { BLAST_BLASTX as BLAST_NEGATIVE_STRAND } from './modules/blast_blastx'     , addParams(options:params.modules['blast_negative_strand'])
 include { FILTER_BLAST_XML                      } from './modules/blast_xml_filter' , addParams(options:[:])
@@ -34,6 +35,7 @@ workflow {
             .ifEmpty { exit 1, "Cannot find reads from ${params.samples}!\n" }
             .set { readpairs }
 
+        BLAST_MAKEBLASTDB()
         BLAST_POSITIVE_STRAND()
         BLAST_NEGATIVE_STRAND()
         FILTER_BLAST_XML()
