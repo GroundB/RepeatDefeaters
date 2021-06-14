@@ -9,15 +9,6 @@ NBIS support 5861
 
  Annotation of unclassified TEs
  ===================================
-
- Runtime parameters
-     Project allocation          : ${params.project}
-     Additional clusterOptions   : ${params.clusterOptions}
-     Results folder              : ${params.outdir}
-
- Workflow parameters
-     Sample Data paths           : ${params.samples}
-
 """)
 
 // Check a project allocation is given for running on Uppmax clusters.
