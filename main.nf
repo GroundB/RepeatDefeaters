@@ -29,11 +29,9 @@ include { PFAM_TRANSPOSIBLE_ELEMENT_SEARCH      } from './modules/pfam_te_search
 workflow {
 
     main:
-        // Get data
-        Channel.fromPath(params.samples)
-            .ifEmpty { exit 1, "Cannot find reads from ${params.samples}!\n" }
-            .set { readpairs }
-
+        RENAME_REPEAT_MODELER_SEQUENCES(
+            file(params.repeat_modeler_fasta, checkIfExists:true)
+            params.species_short_name)
         PFAM_TRANSPOSIBLE_ELEMENT_SEARCH(
             file(params.pfam_a_db, checkIfExists:true)
             file(params.transposon_keywords, checkIfExists:true))
@@ -49,4 +47,19 @@ workflow {
         PFAM_SCAN(FILTER_BLAST_XML.out.fasta)
         ANNOTATION(PFAM_SCAN.out.pfam_table.collect())
 
+}
+
+process RENAME_REPEAT_MODELER_SEQUENCES {
+
+    input:
+    path fasta      // Repeat Modeler fasta
+    val sci_name    // Short name species identifier
+
+    output:
+    path '*.fasta', emit: fasta
+
+    script:
+    """
+    renameRMDLconsensi.pl $fasta $sciname ${sci_name}.fasta
+    """
 }
