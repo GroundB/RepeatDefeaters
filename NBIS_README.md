@@ -9,6 +9,7 @@ workflow/
  | - configs/                        Configuration files that govern workflow execution
  | - containers/                     Custom container definition files
  | - main.nf                         The primary analysis script
+ | - modules/                        Nextflow process definitions (modules)
  | - nextflow.config                 General Nextflow configuration
  \ - params.config.TEMPLATE          A Template for parameter configuration
 ```
