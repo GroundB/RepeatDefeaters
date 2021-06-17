@@ -7,7 +7,7 @@
 #usage		 :./hostfinder.sh
 #==============================================================================
 PROREF=~/conc_sprot.fa
-RRLQUERY=~/cclaro.classified.short
+RRLQUERY=~/cclaro.classified.short	
 PFAM=/mnt/d/pfam32/
 RENAME=cclaro
 PFAMTE=Pfam.TE.accessions_Release32.amended
