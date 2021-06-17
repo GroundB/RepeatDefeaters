@@ -6,3 +6,11 @@ Note:
 * Check script permissions
 * Make sure the environment/container has the correct interpreter
 * These scripts are automatically in the process scopes path.
+
+
+## Script source
+
+- `renameRMDLconsensi.pl`:
+  ```
+  https://github.com/genomicrocosm/physaliaTEcourse/blob/master/Practical2_Computational_annotation/renameRMDLconsensi.pl
+  ```
