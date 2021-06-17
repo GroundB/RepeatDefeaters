@@ -24,7 +24,6 @@ include { PFAM_SCAN                             } from './modules/pfam_scan'    
 include { FILTER_PFAM                           } from './modules/pfam_filter'      , addParams(options:[:])
 include { ANNOTATION                            } from './modules/annotation'       , addParams(options:[:])
 include { PFAM_TRANSPOSIBLE_ELEMENT_SEARCH      } from './modules/pfam_te_search'   , addParams(options:[:])
-include { DIVSUM                                } from './modules/divsum'           , addParams(options:[:])
 
 // The main workflow
 workflow {
@@ -49,6 +48,5 @@ workflow {
         FILTER_BLAST_XML(BLAST_POSTIVE_STRAND.out.xml)
         PFAM_SCAN(FILTER_BLAST_XML.out.fasta)
         ANNOTATION(PFAM_SCAN.out.pfam_table.collect())
-        DIVSUM()
 
 }
