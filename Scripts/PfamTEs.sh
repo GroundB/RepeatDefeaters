@@ -61,7 +61,7 @@ cat *.lines|uniq|sort -n > all.line.id
 # Adds line numbers to description
 nl Pfam-A.full.uniprot.des > Pfam-A.full.uniprot.des.nl
 
-# variable s = Find line number of nearest occurrance of string STOCKHOLM
+# variable s = Find line number of nearest (above) occurrance of string STOCKHOLM
 for i in `cat all.line.id`; do
     a=$(expr $i - 200)
     s=$(cat Pfam-A.full.uniprot.des.nl | awk -v vari="$i" -v vara="$a" 'NR >= vara && NR <= vari' | grep STOCKHOLM | tail -1 | sed 's/#.*//g')
@@ -69,17 +69,18 @@ for i in `cat all.line.id`; do
 done
 
 # For each stockholm, grep last occurence of number?
-# Remove duplicate entries
+# Remove duplicate entries?
 for i in $(awk '{print $1}' ranges | uniq | sort -n );do
     grep $i ranges | tail -n 1 >> ranges.uniq;
 done
 sort -k1,2n ranges.uniq > ranges.uniq.sorted
 
+# for each range, final contains all rows between range
 length=$(cat ranges.uniq.sorted|wc -l)
-for i in $(seq 1 $length)
-do d=$(awk -v row="$i" 'FNR == row {print $1}' ranges.uniq.sorted)
-e=$(awk -v row="$i" 'FNR == row {print $2}' ranges.uniq.sorted)
-cat Pfam-A.full.uniprot.des|awk -v vard="$d" -v vare="$e" 'NR >= vard && NR <= vare' >> final
+for i in $(seq 1 $length); do
+    d=$(awk -v row="$i" 'FNR == row {print $1}' ranges.uniq.sorted)
+    e=$(awk -v row="$i" 'FNR == row {print $2}' ranges.uniq.sorted)
+    cat Pfam-A.full.uniprot.des | awk -v vard="$d" -v vare="$e" 'NR >= vard && NR <= vare' >> final
 done
 
 grep GF\ ID final|uniq|sed 's/.*\ //g' > ../Resources/Pfam.TE.accessions_Release32
