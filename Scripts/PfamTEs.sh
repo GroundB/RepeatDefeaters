@@ -68,8 +68,8 @@ for i in `cat all.line.id`; do
     echo $s $i >> ranges
 done
 
-# For each stockholm, grep last occurence of number?
-# Remove duplicate entries?
+# For each stockholm, grep ranges 
+# Keep largest range.
 for i in $(awk '{print $1}' ranges | uniq | sort -n );do
     grep $i ranges | tail -n 1 >> ranges.uniq;
 done
@@ -83,6 +83,7 @@ for i in $(seq 1 $length); do
     cat Pfam-A.full.uniprot.des | awk -v vard="$d" -v vare="$e" 'NR >= vard && NR <= vare' >> final
 done
 
+# grep the GF ID
 grep GF\ ID final|uniq|sed 's/.*\ //g' > ../Resources/Pfam.TE.accessions_Release32
 cat ../Resources/Pfam.TE.accessions_Release32
 rm ranges.uniq.sorted ranges all.line.id Pfam-A.full.uniprot final Pfam-A.full.uniprot.des ranges.uniq *.lines Pfam-A.full.uniprot.des.nl
