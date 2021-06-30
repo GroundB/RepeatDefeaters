@@ -1,3 +1,4 @@
+#=GF ID
 #=GF CC.*transpos
 #=GF CC.*Aspartyl protease
 #=GF CC.*Asp_protease
