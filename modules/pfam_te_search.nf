@@ -19,45 +19,9 @@ process PFAM_TRANSPOSIBLE_ELEMENT_SEARCH {
     script:
     """
     zgrep "#" $uniprot_db > pfam-a.uniprot.desc
+    grep -n -i -f $keywords pfam-a.uniprot.desc | cut -f1 -d: | sort -n > all.lines.id
 
-    grep -n -i "transpos" pfam-a.uniprot.desc | \\
-        grep "#=GF CC" | \\
-        sed 's/:.*//g' | \\
-        sort -n > tranpos.lines
-    grep -n -i "Aspartyl protease" Pfam-A.full.uniprot.des|grep \#\=GF\ CC|sed 's/:.*//g'|sort -n > Aspartyl.lines
-    grep -n -i Asp_protease Pfam-A.full.uniprot.des|grep \#\=GF\ CC|sed 's/:.*//g'|sort -n > Asp_protease.lines
-    grep -n -i -w gag Pfam-A.full.uniprot.des|grep \#\=GF\ CC|sed 's/:.*//g'|sort -n > gag.lines
-    grep -n -i RNase_H Pfam-A.full.uniprot.des|grep \#\=GF\ CC|sed 's/:.*//g'|sort -n > RNase_H.lines
-    grep -n -i virus Pfam-A.full.uniprot.des|grep \#\=GF\ CC|sed 's/:.*//g'|sort -n > virus.lines
-    grep -n -i viral Pfam-A.full.uniprot.des|grep \#\=GF\ CC|sed 's/:.*//g'|sort -n > viral.lines
-    grep -n -i integrase Pfam-A.full.uniprot.des|grep \#\=GF\ CC|sed 's/:.*//g'|sort -n > integrase.lines
-    grep -n -i transcriptase Pfam-A.full.uniprot.des|grep \#\=GF\ CC|sed 's/:.*//g'|sort -n > RT.lines
-    grep -n -i Helicase Pfam-A.full.uniprot.des|grep \#\=GF\ CC|sed 's/:.*//g'|sort -n > RT.lines
-    grep -n -i envelope Pfam-A.full.uniprot.des|grep \#\=GF\ CC|sed 's/:.*//g'|sort -n > envelope.lines
-    grep -n -i capsid Pfam-A.full.uniprot.des|grep \#\=GF\ CC|sed 's/:.*//g'|sort -n > capsid.lines
-    grep -n -i endonuclease Pfam-A.full.uniprot.des|grep \#\=GF\ CC|sed 's/:.*//g'|sort -n > endonuclease.lines
-    grep -n -i -w CENP Pfam-A.full.uniprot.des|grep \#\=GF\ CC|sed 's/:.*//g'|sort -n > CENP.lines
-    grep -n -i Recombin Pfam-A.full.uniprot.des|grep \#\=GF\ CC|sed 's/:.*//g'|sort -n > Recombin.lines
-
-    grep -n -i transpos Pfam-A.full.uniprot.des|grep \#\=GF\ DE|sed 's/:.*//g'|sort -n >> tranpos.lines
-    grep -n -i Aspartyl\ protease Pfam-A.full.uniprot.des|grep \#\=GF\ DE|sed 's/:.*//g'|sort -n >> Aspartyl.lines
-    grep -n -i Asp_protease Pfam-A.full.uniprot.des|grep \#\=GF\ DE|sed 's/:.*//g'|sort -n >> Asp_protease.lines
-    grep -n -i -w gag Pfam-A.full.uniprot.des|grep \#\=GF\ DE|sed 's/:.*//g'|sort -n >> gag.lines
-    grep -n -i RNase_H Pfam-A.full.uniprot.des|grep \#\=GF\ DE|sed 's/:.*//g'|sort -n >> RNase_H.lines
-    grep -n -i virus Pfam-A.full.uniprot.des|grep \#\=GF\ DE|sed 's/:.*//g'|sort -n >> virus.lines
-    grep -n -i viral Pfam-A.full.uniprot.des|grep \#\=GF\ DE|sed 's/:.*//g'|sort -n >> viral.lines
-    grep -n -i integrase Pfam-A.full.uniprot.des|grep \#\=GF\ DE|sed 's/:.*//g'|sort -n >> integrase.lines
-    grep -n -i transcriptase Pfam-A.full.uniprot.des|grep \#\=GF\ DE|sed 's/:.*//g'|sort -n >> RT.lines
-    grep -n -i Helicase Pfam-A.full.uniprot.des|grep \#\=GF\ DE|sed 's/:.*//g'|sort -n >> RT.lines
-    grep -n -i envelope Pfam-A.full.uniprot.des|grep \#\=GF\ DE|sed 's/:.*//g'|sort -n >> envelope.lines
-    grep -n -i capsid Pfam-A.full.uniprot.des|grep \#\=GF\ DE|sed 's/:.*//g'|sort -n >> capsid.lines
-    grep -n -i endonuclease Pfam-A.full.uniprot.des|grep \#\=GF\ DE|sed 's/:.*//g'|sort -n >> endonuclease.lines
-    grep -n -i -w CENP Pfam-A.full.uniprot.des|grep \#\=GF\ DE|sed 's/:.*//g'|sort -n >> CENP.lines
-    grep -n -i Recombin Pfam-A.full.uniprot.des|grep \#\=GF\ DE|sed 's/:.*//g'|sort -n >> Recombin.lines
-
-    cat *.lines | uniq | sort -n > all.line.id
-
-    nl uniprot.des > uniprot.des.nl
+    nl pfam-a.uniprot.desc > pfam-a.uniprot.desc.nl
 
     for i in `cat all.line.id`; do
         a=\$( expr \$i - 200 )
