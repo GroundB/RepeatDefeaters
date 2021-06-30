@@ -68,7 +68,11 @@ for i in `cat all.line.id`; do
     echo $s $i >> ranges
 done
 
-for i in $(awk '{print $1}' ranges|uniq|sort -n);do grep $i ranges|tail -n 1 >> ranges.uniq;done
+# For each stockholm, grep last occurence of number?
+# Remove duplicate entries
+for i in $(awk '{print $1}' ranges | uniq | sort -n );do
+    grep $i ranges | tail -n 1 >> ranges.uniq;
+done
 sort -k1,2n ranges.uniq > ranges.uniq.sorted
 
 length=$(cat ranges.uniq.sorted|wc -l)
