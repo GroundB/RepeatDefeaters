@@ -20,6 +20,7 @@ grep \# Pfam-A.full.uniprot > Pfam-A.full.uniprot.des
 rm Pfam-A.full.uniprot
 #key word greping
 # This is fetching the line numbers of the match.
+# grep -n -i "^#GF CC.*transpos.*$" <des> | = <line_num>:<grep_match> = | sed = cut -f1 -d:
 grep -n -i transpos Pfam-A.full.uniprot.des|grep \#\=GF\ CC|sed 's/:.*//g'|sort -n > tranpos.lines
 grep -n -i Aspartyl\ protease Pfam-A.full.uniprot.des|grep \#\=GF\ CC|sed 's/:.*//g'|sort -n > Aspartyl.lines
 grep -n -i Asp_protease Pfam-A.full.uniprot.des|grep \#\=GF\ CC|sed 's/:.*//g'|sort -n > Asp_protease.lines
