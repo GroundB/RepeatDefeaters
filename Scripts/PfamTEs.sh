@@ -55,14 +55,17 @@ grep -n -i -w CENP Pfam-A.full.uniprot.des|grep \#\=GF\ DE|sed 's/:.*//g'|sort -
 #grep -n -i Replication Pfam-A.full.uniprot.des|grep \#\=GF\ DE|sed 's/:.*//g'|sort -n >> replication.lines
 grep -n -i Recombin Pfam-A.full.uniprot.des|grep \#\=GF\ DE|sed 's/:.*//g'|sort -n >> Recombin.lines
 
+# This doesn't correctly make a uniquely sorted file.
 cat *.lines|uniq|sort -n > all.line.id
 
+# Adds line numbers to description
 nl Pfam-A.full.uniprot.des > Pfam-A.full.uniprot.des.nl
 
-for i in `cat all.line.id`
-do a=$(expr $i - 200)
-s=$(cat Pfam-A.full.uniprot.des.nl|awk -v vari="$i" -v vara="$a" 'NR >= vara && NR <= vari'|grep STOCKHOLM|tail -1|sed 's/#.*//g')
-echo $s $i >> ranges
+# variable s = Find line number of nearest occurrance of string STOCKHOLM
+for i in `cat all.line.id`; do
+    a=$(expr $i - 200)
+    s=$(cat Pfam-A.full.uniprot.des.nl | awk -v vari="$i" -v vara="$a" 'NR >= vara && NR <= vari' | grep STOCKHOLM | tail -1 | sed 's/#.*//g')
+    echo $s $i >> ranges
 done
 
 for i in $(awk '{print $1}' ranges|uniq|sort -n);do grep $i ranges|tail -n 1 >> ranges.uniq;done
