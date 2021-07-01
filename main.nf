@@ -38,10 +38,10 @@ workflow {
         BLAST_MAKEBLASTDB(
             file(params.protein_reference, checkIfExists:true))
         BLAST_POSITIVE_STRAND(
-            file(params.rrlquery, checkIfExists:true),
+            RENAME_REPEAT_MODELER_SEQUENCES.fasta,
             BLAST_MAKEBLASTDB.out.db)
         BLAST_NEGATIVE_STRAND(
-            file(params.rrlquery, checkIfExists:true),
+            RENAME_REPEAT_MODELER_SEQUENCES.fasta,
             BLAST_MAKEBLASTDB.out.db)
         FILTER_BLAST_XML(BLAST_POSTIVE_STRAND.out.xml)
         PFAM_SCAN(FILTER_BLAST_XML.out.fasta)
