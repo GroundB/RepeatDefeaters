@@ -18,8 +18,7 @@ process PFAM_TRANSPOSIBLE_ELEMENT_SEARCH {
 
     script:
     """
-    zgrep "#" $uniprot_db > pfam-a.uniprot.desc
-    grep -i -f $keywords pfam-a.uniprot.desc > pattern_matches.txt
+    zgrep -i -f $keywords $uniprot_db > pattern_matches.txt
     awk '{ if (\$0 ~ /#=GF ID/) { id_line = \$0 } else { print id_line } }' pattern_matches.txt | uniq | cut -c11- > Pfam.TE.accessions
     """
 }
