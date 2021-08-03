@@ -7,7 +7,7 @@
 #usage		 :./hostfinder.sh
 #==============================================================================
 PROREF=~/conc_sprot.fa
-RRLQUERY=~/cclaro.classified.short	
+RRLQUERY=~/cclaro.classified.short
 PFAM=/mnt/d/pfam32/
 RENAME=cclaro
 PFAMTE=Pfam.TE.accessions_Release32.amended
@@ -19,15 +19,26 @@ echo "running blastx to generate Amino acid predictions from minus strand of con
 blastx -max_target_seqs 1 -num_threads 8 -db $PROREF -query $RRLQUERY -outfmt 14 -out $RRLQUERY.format14.minus -evalue 1e-10 -strand minus
 #plus strand cleanup
 echo "perform cleanup on plus strand predictions"
-for xml in $RRLQUERY.format14.plus*
-do hash=$(grep qseq $xml|wc -l)
-bname=$(grep query-title $xml|sed "s/.*$RENAME/$RENAME/"|sed 's/<.*//g')
-if [ $hash != 0 ]; then
-echo $bname $hash
-for ((i=1;i<=$hash;i++));do echo '>'${bname}_plus_qseq_$i'' >> ${bname}_${hash}.plus.pre
-awk '/qseq/{i++}i=='$i'' $xml|sed -n '/hseq/q;p'|sed s'/qseq>//g'|sed s'/<//g'|sed s'/\///g'|sed s'/-//'g|sed s'/\*//'g|sed s'/X//'g|tr -d " \t" >> ${bname}_${hash}.plus.pre
-done
-fi
+for xml in $RRLQUERY.format14.plus*; do
+    hash=$( grep qseq $xml | wc -l )
+    bname=$( grep query-title $xml | \
+	    sed "s/.*$RENAME/$RENAME/" | \
+		sed 's/<.*//g' )
+    if [ $hash != 0 ]; then
+        echo $bname $hash
+        for ((i=1;i<=$hash;i++));do
+		    echo '>'${bname}_plus_qseq_$i'' >> ${bname}_${hash}.plus.pre
+            awk '/qseq/{i++}i=='$i'' $xml | \
+			    sed -n '/hseq/q;p'| \
+				sed s'/qseq>//g'| \
+				sed s'/<//g'| \
+				sed s'/\///g'| \
+				sed s'/-//'g| \
+				sed s'/\*//'g| \
+				sed s'/X//'g| \
+				tr -d " \t" >> ${bname}_${hash}.plus.pre
+        done
+    fi
 done
 cat *.plus.pre > ~/$RENAME.plus.predicted
 #minus strand cleanup
