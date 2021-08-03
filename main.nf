@@ -17,8 +17,7 @@ if(workflow.profile == "uppmax" && !params.project){
 }
 
 include { BLAST_MAKEBLASTDB                     } from './modules/blast_makeblastdb', addParams(options:parmas.modules['blast_makeblastdb'])
-include { BLAST_BLASTX as BLAST_POSITIVE_STRAND } from './modules/blast_blastx'     , addParams(options:params.modules['blast_positive_strand'])
-include { BLAST_BLASTX as BLAST_NEGATIVE_STRAND } from './modules/blast_blastx'     , addParams(options:params.modules['blast_negative_strand'])
+include { BLAST_BLASTX                          } from './modules/blast_blastx'     , addParams(options:params.modules['blast_positive_strand'])
 include { FILTER_BLAST_XML                      } from './modules/blast_xml_filter' , addParams(options:[:])
 include { PFAM_SCAN                             } from './modules/pfam_scan'        , addParams(options:params.modules['pfam_scan'])
 include { FILTER_PFAM                           } from './modules/pfam_filter'      , addParams(options:[:])
@@ -37,14 +36,10 @@ workflow {
             file(params.transposon_keywords, checkIfExists:true))
         BLAST_MAKEBLASTDB(
             file(params.protein_reference, checkIfExists:true))
-        BLAST_POSITIVE_STRAND(
+        BLAST_BLASTX(
             RENAME_REPEAT_MODELER_SEQUENCES.out.fasta,
             BLAST_MAKEBLASTDB.out.db)
-        BLAST_NEGATIVE_STRAND(
-            RENAME_REPEAT_MODELER_SEQUENCES.out.fasta,
-            BLAST_MAKEBLASTDB.out.db)
-        FILTER_BLAST_XML(BLAST_POSTIVE_STRAND.out.xml)
-        PFAM_SCAN(FILTER_BLAST_XML.out.fasta)
+        PFAM_SCAN(BLAST_BLASTX.out.fasta)
         ANNOTATION(PFAM_SCAN.out.pfam_table.collect())
 
 }
