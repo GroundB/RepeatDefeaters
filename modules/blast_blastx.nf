@@ -23,8 +23,8 @@ process BLAST_BLASTX {
         -query $query \\
         -db $db \\
         $options.args \\
-        -outfmt 14 \\
-        -out ${prefix}.blastx_fmt14
+        -outfmt "6 qseqid qseq" \\
+        -out ${prefix}.blastx.tsv
     blastx -version | sed -e '/^blastx:/!d; s/^.*blastx: //' > blastx.version
     """
 
