@@ -14,10 +14,13 @@ process BLAST_BLASTX {
     path db
 
     output:
-    path "*.blastx_fmt14.xml" , emit: xml
+    // path "*.blastx_fmt14.xml" , emit: xml
+    path "*.blastx.tsv"       , emit: tsv
+    path "*.predicted.fasta"  , emit: fasta
     path "*.version"          , emit: version
 
     script:
+    def prefix = query.baseName
     """
     blastx -num_threads ${task.cpus} \\
         -query $query \\
@@ -25,6 +28,18 @@ process BLAST_BLASTX {
         $options.args \\
         -outfmt "6 qseqid qseq" \\
         -out ${prefix}.blastx.tsv
+    awk '{
+        seq = ""
+        i = 1
+        if (seq == $1) {
+            i++
+        } else {
+            i = 1
+            seq = $1
+        }
+        gsub(/[-X*]/,"",$2)
+        print ">"$1"_"i"\n"$2
+    }' ${prefix}.blastx.tsv > ${prefix}.predicted.fasta
     blastx -version | sed -e '/^blastx:/!d; s/^.*blastx: //' > blastx.version
     """
 
