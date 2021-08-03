@@ -92,14 +92,14 @@ process BLASTX {
     awk '{
         seq = ""
         i = 1
-        if (seq == $1) {
+        if (seq == \$1) {
             i++
         } else {
             i = 1
-            seq = $1
+            seq = \$1
         }
-        gsub(/[-X*]/,"",$2)
-        print ">"$1"_"i"\n"$2
+        gsub(/[-X*]/,"",\$2)
+        print ">"\$1"_${strand}_qseq_"i"\n"\$2
     }' ${prefix}.blastx.tsv > ${prefix}.predicted.fasta
     blastx -version | sed -e '/^blastx:/!d; s/^.*blastx: //' > blastx.version
     """
