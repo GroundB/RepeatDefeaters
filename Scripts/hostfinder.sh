@@ -1,10 +1,10 @@
 #!/bin/bash
 #title           :Detection and annotation of non-TE-repeats
 #description     :filter out host proteins from unclassified repeat consensus
-#author		 :wenbo.xu@botinst.uzh.ch
+#author         :wenbo.xu@botinst.uzh.ch
 #date            :20201011
 #version         :0.3
-#usage		 :./hostfinder.sh
+#usage         :./hostfinder.sh
 #==============================================================================
 PROREF=~/conc_sprot.fa
 RRLQUERY=~/cclaro.classified.short
@@ -22,21 +22,21 @@ echo "perform cleanup on plus strand predictions"
 for xml in $RRLQUERY.format14.plus*; do
     hash=$( grep qseq $xml | wc -l )
     bname=$( grep query-title $xml | \
-	    sed "s/.*$RENAME/$RENAME/" | \
-		sed 's/<.*//g' )
+        sed "s/.*$RENAME/$RENAME/" | \
+        sed 's/<.*//g' )
     if [ $hash != 0 ]; then
         echo $bname $hash
         for ((i=1;i<=$hash;i++));do
-		    echo '>'${bname}_plus_qseq_$i'' >> ${bname}_${hash}.plus.pre
+            echo '>'${bname}_plus_qseq_$i'' >> ${bname}_${hash}.plus.pre
             awk '/qseq/{i++}i=='$i'' $xml | \
-			    sed -n '/hseq/q;p'| \
-				sed s'/qseq>//g'| \
-				sed s'/<//g'| \
-				sed s'/\///g'| \
-				sed s'/-//'g| \
-				sed s'/\*//'g| \
-				sed s'/X//'g| \
-				tr -d " \t" >> ${bname}_${hash}.plus.pre
+                sed -n '/hseq/q;p'| \
+                sed s'/qseq>//g'| \
+                sed s'/<//g'| \
+                sed s'/\///g'| \
+                sed s'/-//'g| \
+                sed s'/\*//'g| \
+                sed s'/X//'g| \
+                tr -d " \t" >> ${bname}_${hash}.plus.pre
         done
     fi
 done
