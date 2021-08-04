@@ -204,7 +204,7 @@ process ANNOTATION {
     }
 
     input:
-    path pfam_table                // Pfam output
+    path pfam_table                // Pfam output (*.pfamtbl)
     path pfam_keyword_accession    // Pfam accessions from keyword search
     val prefix                     // prefix
 
@@ -213,15 +213,22 @@ process ANNOTATION {
 
     script:
     """
-    printf "subsetting the pfamtbl output to unclassified consensus only. \n"
-    grep -i "#unknown" $RENAME.plus.predicted.pfamtbl > $RENAME.plus.predicted.pfamtbl.unclassified
-    grep -i "#unknown" $RENAME.minus.predicted.pfamtbl > $RENAME.minus.predicted.pfamtbl.unclassified
+    for TBL in $pfam_table; do
+        grep -i "#unknown" \$TBL | \\
+        grep -i -w -f $pfam_keyword_accession | \\
+        tee -a ${prefix}.Unclassified_consensus_TEs | \\
+        cut -f1 -d"#" | uniq > \${TBL/.pfamtbl/.unclassified_ids}
+    done
 
-    printf "Detect unclassified consensi that have TE domains. Plus strand:\n`grep -i -w -f $PFAMTE $RENAME.plus.predicted.pfamtbl.unclassified` \n"
-    printf "Detect unclassified consensi that have TE domains. Minus strand:\n`grep -i -w -f $PFAMTE $RENAME.minus.predicted.pfamtbl.unclassified` \n"
+    ## printf "subsetting the pfamtbl output to unclassified consensus only. \n"
+    ## grep -i "#unknown" $RENAME.plus.predicted.pfamtbl > $RENAME.plus.predicted.pfamtbl.unclassified
+    ## grep -i "#unknown" $RENAME.minus.predicted.pfamtbl > $RENAME.minus.predicted.pfamtbl.unclassified
 
-    grep -i -w -f $PFAMTE $RENAME.plus.predicted.pfamtbl.unclassified  | awk '{print $1}' | sed 's/\#.*//g' | uniq > 001.tem
-    grep -i -w -f $PFAMTE $RENAME.minus.predicted.pfamtbl.unclassified | awk '{print $1}' | sed 's/\#.*//g' | uniq > 002.tem
+    ## printf "Detect unclassified consensi that have TE domains. Plus strand:\n`grep -i -w -f $PFAMTE $RENAME.plus.predicted.pfamtbl.unclassified` \n"
+    ## printf "Detect unclassified consensi that have TE domains. Minus strand:\n`grep -i -w -f $PFAMTE $RENAME.minus.predicted.pfamtbl.unclassified` \n"
+
+    ## grep -i -w -f $PFAMTE $RENAME.plus.predicted.pfamtbl.unclassified  | awk '{print $1}' | sed 's/\#.*//g' | uniq > 001.tem
+    ## grep -i -w -f $PFAMTE $RENAME.minus.predicted.pfamtbl.unclassified | awk '{print $1}' | sed 's/\#.*//g' | uniq > 002.tem
 
     cat 001.tem 002.tem | uniq > $RENAME.Unclassified_consensus_TEs.ids #can be used to annotate unknown consensus to TEs
 
