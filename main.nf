@@ -164,7 +164,7 @@ process PFAM_SCAN {
     path db
 
     output:
-    path '', emit: pfam_table
+    path '*.pfamtbl', emit: pfam_table
     path '*.version', emit: version
 
     script:
