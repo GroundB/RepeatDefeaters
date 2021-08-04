@@ -33,7 +33,9 @@ workflow {
             BLAST_MAKEBLASTDB.out.db,
             ['plus','minus'])
         PFAM_SCAN(BLASTX.out.fasta,params.pfam_hmm_db)
-        ANNOTATION(PFAM_SCAN.out.pfam_table.collect())
+        ANNOTATION(PFAM_SCAN.out.pfam_table.collect(),
+            PFAM_TRANSPOSIBLE_ELEMENT_SEARCH.out.pfam_accessions,
+            params.species_short_name)
 
 }
 
@@ -174,7 +176,7 @@ process PFAM_SCAN {
     path '*.version', emit: version
 
     script:
-    prefix = fasta.baseName
+    def prefix = fasta.baseName
     """
     pfam_scan.pl \\
         -fasta $fasta \\
