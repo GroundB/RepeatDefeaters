@@ -173,7 +173,7 @@ process PFAM_SCAN {
     pfam_scan.pl \\
         -fasta $fasta \\
         -dir $PFAM \\
-        -outfile ${prefix}.predicted.pfamtbl \\
+        -outfile ${prefix}.pfamtbl \\
         ${params.modules['pfam'].args}
     """
 
