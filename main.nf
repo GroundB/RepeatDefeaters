@@ -70,7 +70,9 @@ process PFAM_TRANSPOSIBLE_ELEMENT_SEARCH {
 
     script:
     """
+    # Search for keywords and IDs
     zgrep -i -e "^#=GF ID" -f $keywords $uniprot_db > pattern_matches.txt
+    # Print closest ID above keyword match
     awk '{ if (\$0 ~ /#=GF ID/) { id_line = \$0 } else { print id_line } }' pattern_matches.txt | uniq | cut -c11- > Pfam.TE.accessions
     """
 }
@@ -133,6 +135,10 @@ process BLASTX {
         -outfmt "6 qseqid qseq" \\
         -strand $strand \\
         -out ${prefix}.${strand}.blastx.tsv
+    # Blast output is a two column table
+    # awk: Format two column output to fasta
+    #      Label sequence header with strand and
+    #      accumulator to form unique sequence headers
     awk '{
         seq = ""
         i = 1
@@ -189,8 +195,9 @@ process ANNOTATION {
     }
 
     input:
-    path pfam_table // list of pfam_tables
-    val prefix // prefix
+    path pfam_table                // Pfam output
+    path pfam_keyword_accession    // Pfam accessions from keyword search
+    val prefix                     // prefix
 
     output:
     path "", emit: xml
