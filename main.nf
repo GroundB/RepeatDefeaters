@@ -94,8 +94,9 @@ process MAKEBLASTDB {
     script:
     """
     makeblastdb \\
+        ${params.modules['makeblastdb'].args} \\
         -in $fasta \\
-        ${params.modules['makeblastdb'].args}
+        -dbtype prot
     mkdir blast_db
     mv ${fasta}* blast_db
     makeblastdb -version | sed -e '/^makeblastdb:/!d; s/^.*makeblastdb: //' > ${software}.version.txt
@@ -172,7 +173,7 @@ process PFAM_SCAN {
     pfam_scan.pl \\
         -fasta $fasta \\
         -dir $PFAM \\
-        -outfile ${prefix}.plus.predicted.pfamtbl \\
+        -outfile ${prefix}.predicted.pfamtbl \\
         ${params.modules['pfam'].args}
     """
 
