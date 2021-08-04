@@ -32,7 +32,7 @@ workflow {
             RENAME_REPEAT_MODELER_SEQUENCES.out.fasta,
             BLAST_MAKEBLASTDB.out.db,
             ['plus','minus'])
-        PFAM_SCAN(BLASTX.out.fasta,)
+        PFAM_SCAN(BLASTX.out.fasta,params.pfam_hmm_db)
         ANNOTATION(PFAM_SCAN.out.pfam_table.collect())
 
 }
