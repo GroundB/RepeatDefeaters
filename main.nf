@@ -40,7 +40,7 @@ workflow {
             RENAME_REPEAT_MODELER_SEQUENCES.out.fasta,
             BLAST_MAKEBLASTDB.out.db,
             ['plus','minus'])
-        PFAM_SCAN(BLAST_BLASTX.out.fasta)
+        PFAM_SCAN(BLASTX.out.fasta)
         ANNOTATION(PFAM_SCAN.out.pfam_table.collect())
 
 }
@@ -88,7 +88,7 @@ process BLASTX {
         $options.args \\
         -outfmt "6 qseqid qseq" \\
         -strand $strand \\
-        -out ${prefix}.blastx.tsv
+        -out ${prefix}.${strand}.blastx.tsv
     awk '{
         seq = ""
         i = 1
@@ -100,7 +100,7 @@ process BLASTX {
         }
         gsub(/[-X*]/,"",\$2)
         print ">"\$1"_${strand}_qseq_"i"\n"\$2
-    }' ${prefix}.blastx.tsv > ${prefix}.predicted.fasta
+    }' ${prefix}.${strand}.blastx.tsv > ${prefix}.${strand}.predicted.fasta
     blastx -version | sed -e '/^blastx:/!d; s/^.*blastx: //' > blastx.version
     """
 
