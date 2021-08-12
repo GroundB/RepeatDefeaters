@@ -212,8 +212,9 @@ process ANNOTATION {
 
     output:
     path "${prefix}.renamed.fasta"              , emit: fasta
-    path "${prefix}.Unclassified_consensus_TEs" , emit: unclassified_with_te
-    path "${prefix}.consensus.both.strand"      , emit:
+    path "${prefix}.Unclassified_consensus_TEs" , emit: unclassified_with_te_domains
+    path "${prefix}.consensus.both.strand"      , emit: unclassified_with_non_te_domains_both_strands
+    path "${prefix}.mono"                       , emit: unclassified_with_non_te_domains_single_strand
 
     script:
     """
@@ -241,15 +242,16 @@ process ANNOTATION {
             cut -f1 -d'#' | uniq > "\${UNCLASSIFIED}.TEpurged.ids"
     done
 
-    # CHECK!!!! Intersection of consensus without domains, but states domains on both strands!!!!
     # Use shell expansion to expand plus and minus strand files for unsorted inner join
     grep -f *.TEpurged.ids > ${prefix}.consensus.both.strand
-    # ${prefix}.consensus.both.strand : Unclassified consensus sequences that have domains detected in both strands
+    # ${prefix}.consensus.both.strand : Unclassified consensus sequences that have
+    # non-TE domains detected in both strands.
     # These are tricky to annotate.
 
-    # In consensus without TE domains, remove consensus with TE domains on both strands !!!
+    # In consensus without TE domains, remove consensus with non-TE domains on both strands
+    # (leaving consensus with non-TE domains on a single-strand)
     for TEPURGED in *.TEpurged; do
-        # grep       : Remove consensus with domains on both strands !!
+        # grep       : Remove consensus with non-TE domains on both strands
         # awk        : then remove consensus shorter than 100 amino acids
         # cut + uniq : and extract their id's
         grep -v -f ${prefix}.consensus.both.strand "\$TEPURGED" | \\
