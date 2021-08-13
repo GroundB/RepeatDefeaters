@@ -21,19 +21,19 @@ workflow {
 
     main:
         RENAME_REPEAT_MODELER_SEQUENCES(
-            file("${params.repeat_modeler_fasta}", checkIfExists:true)
+            file(params.repeat_modeler_fasta, checkIfExists:true),
             params.species_short_name)
         PFAM_TRANSPOSIBLE_ELEMENT_SEARCH(
-            file("${params.pfam_a_db}", checkIfExists:true)
-            file("${params.transposon_keywords}", checkIfExists:true))
+            file(params.pfam_a_db, checkIfExists:true),
+            file(params.transposon_keywords, checkIfExists:true))
         MAKEBLASTDB(
-            file("${params.protein_reference}", checkIfExists:true))
+            file(params.protein_reference, checkIfExists:true))
         BLASTX(
             RENAME_REPEAT_MODELER_SEQUENCES.out.fasta,
             BLAST_MAKEBLASTDB.out.db,
             ['plus','minus'])
         PFAM_SCAN(BLASTX.out.fasta,
-            file("${params.pfam_hmm_db}", checkIfExists:true))
+            file(params.pfam_hmm_db, checkIfExists:true))
         ANNOTATION(RENAME_REPEAT_MODELER_SEQUENCES.out.fasta,
             PFAM_SCAN.out.pfam_table.collect(),
             PFAM_TRANSPOSIBLE_ELEMENT_SEARCH.out.pfam_accessions,
