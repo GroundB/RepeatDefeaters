@@ -195,7 +195,7 @@ process BLASTX {
             seq = \$1
         }
         gsub(/[-X*]/,"",\$2)
-        print ">"\$1"_${strand}_qseq_"i"\n"\$2
+        print ">"\$1"_${strand}_qseq_"i"\\n"\$2
     }' ${prefix}.${strand}.blastx.tsv > ${prefix}.${strand}.predicted.fasta
 
     cat <<-END_VERSIONS > versions.yml
