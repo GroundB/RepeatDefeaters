@@ -50,7 +50,7 @@ workflow {
             BLASTX.out.versions.first(),
             PFAM_SCAN.out.versions.first(),
             ANNOTATION.out.versions)
-            .collectFile(name:software_versions.yml,
+            .collectFile(name:"software_versions.yml",
                 cache:false,
                 storeDir:"${params.results}/pipeline_info")
 
