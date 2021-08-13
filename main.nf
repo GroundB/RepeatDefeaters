@@ -61,11 +61,17 @@ process RENAME_REPEAT_MODELER_SEQUENCES {
     val sci_name    // Short name species identifier
 
     output:
-    path '*.fasta', emit: fasta
+    path '*.fasta'      , emit: fasta
+    path "versions.yml" , emit: versions
 
     script:
     """
     renameRMDLconsensi.pl $fasta $sci_name ${sci_name}.fasta
+
+    cat <END_VERSIONS > versions.yml
+    RENAME_REPEAT_MODELER_SEQUENCES:
+        perl : \$( perl --version )
+    END_VERSIONS
     """
 }
 
@@ -84,6 +90,7 @@ process PFAM_TRANSPOSIBLE_ELEMENT_SEARCH {
 
     output:
     path "Pfam.TE.accessions", emit: te_domain_proteins
+    path "versions.yml"      , emit: versions
 
     script:
     """
@@ -91,6 +98,14 @@ process PFAM_TRANSPOSIBLE_ELEMENT_SEARCH {
     zgrep -i -e "^#=GF ID" -f $keywords $uniprot_db > pattern_matches.txt
     # Print closest ID above keyword match
     awk '{ if (\$0 ~ /#=GF ID/) { id_line = \$0 } else { print id_line } }' pattern_matches.txt | uniq | cut -c11- > Pfam.TE.accessions
+
+    cat <END_VERSIONS > versions.yml
+    PFAM_TRANSPOSIBLE_ELEMENT_SEARCH:
+        zgrep: \$( zgrep --version )
+        awk  : \$( awk --version   )
+        uniq : \$( uniq --version  )
+        cut  : \$( cut --version   )
+    END_VERSIONS
     """
 }
 
@@ -107,8 +122,8 @@ process MAKEBLASTDB {
     path fasta
 
     output:
-    path "blastdb"    , emit: db
-    path "*.version"  , emit: version
+    path "blastdb"       , emit: db
+    path "versions.yml"  , emit: versions
 
     script:
     """
@@ -118,7 +133,11 @@ process MAKEBLASTDB {
         -dbtype prot
     mkdir blast_db
     mv ${fasta}* blast_db
-    makeblastdb -version | sed -e '/^makeblastdb:/!d; s/^.*makeblastdb: //' > ${software}.version.txt
+
+    cat <END_VERSIONS > versions.yml
+    MAKEBLASTDB:
+        makeblastdb: \$(makeblastdb -version | sed -e '/^makeblastdb:/!d; s/^.*makeblastdb: //' )
+    END_VERSIONS
     """
 
 }
@@ -140,7 +159,7 @@ process BLASTX {
     output:
     path "*.blastx.tsv"       , emit: tsv
     path "*.predicted.fasta"  , emit: fasta
-    path "*.version"          , emit: version
+    path "versions.yml"       , emit: versions
 
     script:
     def prefix = query.baseName
@@ -168,7 +187,12 @@ process BLASTX {
         gsub(/[-X*]/,"",\$2)
         print ">"\$1"_${strand}_qseq_"i"\n"\$2
     }' ${prefix}.${strand}.blastx.tsv > ${prefix}.${strand}.predicted.fasta
-    blastx -version | sed -e '/^blastx:/!d; s/^.*blastx: //' > blastx.version
+
+    cat <END_VERSIONS > versions.yml
+    BLASTX:
+        blastx: \$( blastx -version | sed -e '/^blastx:/!d; s/^.*blastx: //' )
+        awk   : \$( awk --version )
+    END_VERSIONS
     """
 
 }
@@ -187,8 +211,8 @@ process PFAM_SCAN {
     path db
 
     output:
-    path '*.pfamtbl', emit: pfam_table
-    path '*.version', emit: version
+    path '*.pfamtbl'    , emit: pfam_table
+    path "versions.yml" , emit: versions
 
     script:
     def prefix = fasta.baseName
@@ -198,6 +222,11 @@ process PFAM_SCAN {
         -dir $PFAM \\
         -outfile ${prefix}.pfamtbl \\
         ${params.modules['pfam'].args}
+
+    cat <END_VERSIONS > versions.yml
+    PFAM_SCAN:
+        pfam_scan: \$( pfam_scan.pl --version )
+    END_VERSIONS
     """
 
 }
@@ -221,6 +250,7 @@ process ANNOTATION {
     path "${prefix}.renamed.fasta"              , emit: fasta
     path "${prefix}.Unclassified_consensus_TEs" , emit: unclassified_with_te_domains
     path "${prefix}.consensus.both.strand"      , emit: unclassified_with_non_te_domains_both_strands
+    path "versions.yml"                         , emit: versions
 
     script:
     """
@@ -282,6 +312,16 @@ process ANNOTATION {
             sed -i "s|\$OLDNAME|\${OLDNAME%Unknown}\$NAMEHASH|g" ${prefix}.renamed.fasta
         done < "\$CONSENSUS"
     done
+
+    cat <END_VERSIONS > versions.yml
+    ANNOTATION:
+        grep : \$( grep --version )
+        tee  : \$( tee --version  )
+        awk  : \$( awk --version  )
+        uniq : \$( uniq --version )
+        cut  : \$( cut --version  )
+        sed  : \$( sed --version  )
+    END_VERSIONS
     """
 }
 
