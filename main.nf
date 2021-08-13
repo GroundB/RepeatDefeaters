@@ -30,7 +30,7 @@ workflow {
             file(params.protein_reference, checkIfExists:true))
         BLASTX(
             RENAME_REPEAT_MODELER_SEQUENCES.out.fasta,
-            BLAST_MAKEBLASTDB.out.db,
+            MAKEBLASTDB.out.db,
             ['plus','minus'])
         PFAM_SCAN(BLASTX.out.fasta,
             file(params.pfam_hmm_db, checkIfExists:true))
