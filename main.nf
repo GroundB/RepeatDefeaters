@@ -131,7 +131,7 @@ process MAKEBLASTDB {
     path fasta
 
     output:
-    path "blastdb"       , emit: db
+    path "blast_db"      , emit: db
     path "versions.yml"  , emit: versions
 
     script:
