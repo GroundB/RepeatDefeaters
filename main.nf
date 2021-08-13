@@ -23,9 +23,15 @@ workflow {
         RENAME_REPEAT_MODELER_SEQUENCES(
             file(params.repeat_modeler_fasta, checkIfExists:true),
             params.species_short_name)
-        PFAM_TRANSPOSIBLE_ELEMENT_SEARCH(
-            file(params.pfam_a_db, checkIfExists:true),
-            file(params.transposon_keywords, checkIfExists:true))
+        protein_te_domain_list = channel.empty()
+        if (params.pfam_proteins_with_te_domain_list){
+            protein_te_domain_list = file(params.pfam_proteins_with_te_domain_list, checkIfExists:true)
+        } else {
+            PFAM_TRANSPOSIBLE_ELEMENT_SEARCH(
+                file(params.pfam_a_db, checkIfExists:true),
+                file(params.transposon_keywords, checkIfExists:true))
+            protein_te_domain_list = PFAM_TRANSPOSIBLE_ELEMENT_SEARCH.out.te_domain_proteins
+        }
         MAKEBLASTDB(
             file(params.protein_reference, checkIfExists:true))
         BLASTX(
@@ -36,7 +42,7 @@ workflow {
             file(params.pfam_hmm_db, checkIfExists:true))
         ANNOTATION(RENAME_REPEAT_MODELER_SEQUENCES.out.fasta,
             PFAM_SCAN.out.pfam_table.collect(),
-            PFAM_TRANSPOSIBLE_ELEMENT_SEARCH.out.pfam_accessions,
+            protein_te_domain_list,
             params.species_short_name)
 
 }
@@ -77,7 +83,7 @@ process PFAM_TRANSPOSIBLE_ELEMENT_SEARCH {
     path keywords
 
     output:
-    path "Pfam.TE.accessions", emit: pfam_accessions
+    path "Pfam.TE.accessions", emit: te_domain_proteins
 
     script:
     """
