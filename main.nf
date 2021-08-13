@@ -270,8 +270,8 @@ process ANNOTATION {
         # sed         : replace Unknown with NAMEHASH
         while read -r SEQID; do
             echo "\$SEQID" >> ${prefix}.renamed
-            NAMEHASH=$( grep "\$SEQID" "\${CONSENSUS/.ids/}" | cut -f7 | sort | uniq | paste -s -d '_' )
-            OLDNAME=$( grep "\$SEQID" $repeat_library | cut -c2- )
+            NAMEHASH=\$( grep "\$SEQID" "\${CONSENSUS/.ids/}" | cut -f7 | sort | uniq | paste -s -d '_' )
+            OLDNAME=\$( grep "\$SEQID" $repeat_library | cut -c2- )
             sed -i "s|\$OLDNAME|\${OLDNAME%Unknown}\$NAMEHASH|g" ${prefix}.renamed.fasta
         done < "\$CONSENSUS"
     done
