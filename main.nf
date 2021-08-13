@@ -23,6 +23,7 @@ workflow {
         RENAME_REPEAT_MODELER_SEQUENCES(
             file(params.repeat_modeler_fasta, checkIfExists:true),
             params.species_short_name)
+        ch_versions = RENAME_REPEAT_MODELER_SEQUENCES.out.versions
         protein_te_domain_list = channel.empty()
         if (params.pfam_proteins_with_te_domain_list){
             protein_te_domain_list = file(params.pfam_proteins_with_te_domain_list, checkIfExists:true)
@@ -31,6 +32,7 @@ workflow {
                 file(params.pfam_a_db, checkIfExists:true),
                 file(params.transposon_keywords, checkIfExists:true))
             protein_te_domain_list = PFAM_TRANSPOSIBLE_ELEMENT_SEARCH.out.te_domain_proteins
+            ch_versions.mix(PFAM_TRANSPOSIBLE_ELEMENT_SEARCH.out.versions)
         }
         MAKEBLASTDB(
             file(params.protein_reference, checkIfExists:true))
@@ -44,6 +46,13 @@ workflow {
             PFAM_SCAN.out.pfam_table.collect(),
             protein_te_domain_list,
             params.species_short_name)
+        ch_versions.mix(MAKEBLASTDB.out.versions,
+            BLASTX.out.versions.first(),
+            PFAM_SCAN.out.versions.first(),
+            ANNOTATION.out.versions)
+            .collectFile(name:software_versions.yml,
+                cache:false,
+                storeDir:"${params.results}/pipeline_info")
 
 }
 
