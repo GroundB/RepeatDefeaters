@@ -129,7 +129,7 @@ process BLASTX {
     input:
     val query
     path db
-    each val strand
+    each strand
 
     output:
     path "*.blastx.tsv"       , emit: tsv
