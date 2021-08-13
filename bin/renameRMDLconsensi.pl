@@ -1,4 +1,4 @@
-#!/usr/bin/env/perl
+#! /usr/bin/env perl
 
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 # perl renameRMDLconsensi.pl <input> <prefix> <output>	#
@@ -43,4 +43,4 @@ while (my $line = <IN>) {
     }
 }
 close (IN);
-close (OUT); 
+close (OUT);
