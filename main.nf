@@ -173,9 +173,10 @@ process BLASTX {
     script:
     def prefix = query.baseName
     """
+    BLASTDB=\$( find -L ./ -name "*.pdb" | sed 's/.pdb//' )
     blastx -num_threads ${task.cpus} \\
         -query $query \\
-        -db $db \\
+        -db \$BLASTDB \\
         ${params.modules['blastx'].args} \\
         -outfmt "6 qseqid qseq" \\
         -strand $strand \\
