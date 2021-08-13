@@ -68,7 +68,7 @@ process RENAME_REPEAT_MODELER_SEQUENCES {
     """
     renameRMDLconsensi.pl $fasta $sci_name ${sci_name}.fasta
 
-    cat <END_VERSIONS > versions.yml
+    cat <<-END_VERSIONS > versions.yml
     RENAME_REPEAT_MODELER_SEQUENCES:
         perl : \$( perl --version )
     END_VERSIONS
@@ -99,7 +99,7 @@ process PFAM_TRANSPOSIBLE_ELEMENT_SEARCH {
     # Print closest ID above keyword match
     awk '{ if (\$0 ~ /#=GF ID/) { id_line = \$0 } else { print id_line } }' pattern_matches.txt | uniq | cut -c11- > Pfam.TE.accessions
 
-    cat <END_VERSIONS > versions.yml
+    cat <<-END_VERSIONS > versions.yml
     PFAM_TRANSPOSIBLE_ELEMENT_SEARCH:
         zgrep: \$( zgrep --version )
         awk  : \$( awk --version   )
@@ -134,7 +134,7 @@ process MAKEBLASTDB {
     mkdir blast_db
     mv ${fasta}* blast_db
 
-    cat <END_VERSIONS > versions.yml
+    cat <<-END_VERSIONS > versions.yml
     MAKEBLASTDB:
         makeblastdb: \$(makeblastdb -version | sed -e '/^makeblastdb:/!d; s/^.*makeblastdb: //' )
     END_VERSIONS
@@ -188,7 +188,7 @@ process BLASTX {
         print ">"\$1"_${strand}_qseq_"i"\n"\$2
     }' ${prefix}.${strand}.blastx.tsv > ${prefix}.${strand}.predicted.fasta
 
-    cat <END_VERSIONS > versions.yml
+    cat <<-END_VERSIONS > versions.yml
     BLASTX:
         blastx: \$( blastx -version | sed -e '/^blastx:/!d; s/^.*blastx: //' )
         awk   : \$( awk --version )
@@ -223,7 +223,7 @@ process PFAM_SCAN {
         -outfile ${prefix}.pfamtbl \\
         ${params.modules['pfam'].args}
 
-    cat <END_VERSIONS > versions.yml
+    cat <<-END_VERSIONS > versions.yml
     PFAM_SCAN:
         pfam_scan: \$( pfam_scan.pl --version )
     END_VERSIONS
@@ -313,7 +313,7 @@ process ANNOTATION {
         done < "\$CONSENSUS"
     done
 
-    cat <END_VERSIONS > versions.yml
+    cat <<-END_VERSIONS > versions.yml
     ANNOTATION:
         grep : \$( grep --version )
         tee  : \$( tee --version  )
