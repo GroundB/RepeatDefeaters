@@ -214,7 +214,6 @@ process ANNOTATION {
     path "${prefix}.renamed.fasta"              , emit: fasta
     path "${prefix}.Unclassified_consensus_TEs" , emit: unclassified_with_te_domains
     path "${prefix}.consensus.both.strand"      , emit: unclassified_with_non_te_domains_both_strands
-    path "${prefix}.mono"                       , emit: unclassified_with_non_te_domains_single_strand
 
     script:
     """
