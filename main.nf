@@ -59,7 +59,7 @@ process RENAME_REPEAT_MODELER_SEQUENCES {
 
     script:
     """
-    renameRMDLconsensi.pl $fasta $sciname ${sci_name}.fasta
+    renameRMDLconsensi.pl $fasta $sci_name ${sci_name}.fasta
     """
 }
 
