@@ -227,9 +227,16 @@ process PFAM_SCAN {
     script:
     def prefix = fasta.baseName
     """
+    # Stage local copy of Pfam HMM DB
+    mkdir -p HMM_DB
+    for FILE in $hmm_db; do
+        PREFIX=$( basename "\$FILE" .gz )
+        zcat "\$FILE" > "HMM_DB/\${PREFIX}"
+    done
+
     pfam_scan.pl \\
         -fasta $fasta \\
-        -dir . \\
+        -dir HMM_DB \\
         -cpu ${task.cpus} \\
         -outfile ${prefix}.pfamtbl \\
         ${params.modules['pfam'].args}
