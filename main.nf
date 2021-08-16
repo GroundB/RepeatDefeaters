@@ -230,7 +230,7 @@ process PFAM_SCAN {
     # Stage local copy of Pfam HMM DB
     mkdir -p HMM_DB
     for FILE in $hmm_db; do
-        PREFIX=$( basename "\$FILE" .gz )
+        PREFIX=\$( basename "\$FILE" .gz )
         zcat "\$FILE" > "HMM_DB/\${PREFIX}"
     done
 
