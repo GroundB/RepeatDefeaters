@@ -229,7 +229,7 @@ process PFAM_SCAN {
     """
     pfam_scan.pl \\
         -fasta $fasta \\
-        -dir $hmm_db \\
+        -dir . \\
         -cpu ${task.cpus} \\
         -outfile ${prefix}.pfamtbl \\
         ${params.modules['pfam'].args}
