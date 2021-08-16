@@ -41,7 +41,9 @@ workflow {
             MAKEBLASTDB.out.db,
             ['plus','minus'])
         PFAM_SCAN(BLASTX.out.fasta,
-            Channel.fromPath(params.pfam_hmm_db, checkIfExists:true).collect())
+            Channel.fromPath(
+                [params.pfam_hmm_db, params.pfam_hmm_dat],
+                checkIfExists:true).collect())
         ANNOTATION(RENAME_REPEAT_MODELER_SEQUENCES.out.fasta,
             PFAM_SCAN.out.pfam_table.collect(),
             protein_te_domain_list,
