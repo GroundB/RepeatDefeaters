@@ -187,9 +187,11 @@ process BLASTX {
     # awk: Format two column output to fasta
     #      Label sequence header with strand and
     #      accumulator to form unique sequence headers
-    awk '{
+    awk 'BEGIN {
         seq = ""
         i = 1
+    }
+    {
         if (seq == \$1) {
             i++
         } else {
@@ -234,6 +236,9 @@ process PFAM_SCAN {
     for FILE in $hmm_db; do
         PREFIX=\$( basename "\$FILE" .gz )
         zcat "\$FILE" > "HMM_DB/\${PREFIX}"
+    done
+    for HMMDB in HMM_DB/*.hmm; do
+        hmmpress \$HMMDB
     done
 
     pfam_scan.pl \\
