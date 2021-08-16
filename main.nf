@@ -24,7 +24,7 @@ workflow {
             file(params.repeat_modeler_fasta, checkIfExists:true),
             params.species_short_name)
         ch_versions = RENAME_REPEAT_MODELER_SEQUENCES.out.versions
-        protein_te_domain_list = channel.empty()
+        protein_te_domain_list = Channel.empty()
         if (params.pfam_proteins_with_te_domain_list){
             protein_te_domain_list = file(params.pfam_proteins_with_te_domain_list, checkIfExists:true)
         } else {
@@ -41,7 +41,7 @@ workflow {
             MAKEBLASTDB.out.db,
             ['plus','minus'])
         PFAM_SCAN(BLASTX.out.fasta,
-            file(params.pfam_hmm_db, checkIfExists:true))
+            Channel.fromPath(params.pfam_hmm_db, checkIfExists:true).collect())
         ANNOTATION(RENAME_REPEAT_MODELER_SEQUENCES.out.fasta,
             PFAM_SCAN.out.pfam_table.collect(),
             protein_te_domain_list,
