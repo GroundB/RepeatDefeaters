@@ -218,7 +218,7 @@ process PFAM_SCAN {
 
     input:
     path fasta
-    path db
+    path hmm_db
 
     output:
     path '*.pfamtbl'    , emit: pfam_table
@@ -229,7 +229,7 @@ process PFAM_SCAN {
     """
     pfam_scan.pl \\
         -fasta $fasta \\
-        -dir $PFAM \\
+        -dir $hmm_db \\
         -outfile ${prefix}.pfamtbl \\
         ${params.modules['pfam'].args}
 
