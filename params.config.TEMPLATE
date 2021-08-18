@@ -1,21 +1,45 @@
 // Workflow parameters
-    // SNIC Compute allocation
-params.project = 'snic20XX-YY-ZZ'
-    // Custom cluster options (often not needed)
-params.clusterOptions = ''
-    // The absolute path (full path, begins with / ) to the results folder
-    // If you have a SNIC Storage allocation, use that!
-params.results = '/proj/snic20xx-yy-zz/NBIS_support_<id>_results'
+params {
+
+    // Workflow inputs
     // The absolute path (full path, begins with / ) to the input data
-params.samples = ''
+    // Repeat modeler library
+    repeat_modeler_fasta = ''
+    // Species short name for renaming sequences
+    species_short_name = ''
+
+    // Workflow outputs
+    // The absolute path (full path, begins with / ) to the results folder
+    results = 'results'
     // Mode of copying results from the work directory
     // 'symlink' : Use for test data.
     // 'copy'    : Use for full analysis data.
-params.publish_mode = 'symlink' // values: 'symlink', 'copy'
+    publish_mode = 'symlink' // values: 'symlink', 'copy'
+}
 
 // Nextflow configuration
-    // The absolute path (full path, begins with / ) to the work directory (intermediate results)
-    // If you have a SNIC Storage allocation, use the nobackup folder in there.
-workDir = '/proj/snic20xx-yy-zz/nobackup/nxf-work'
-    // Resume analysis from the last complete process executions (not from the beginning).
+// The absolute path (full path, begins with / ) to the work directory ( where intermediate results are stored )
+// If you have a SNIC Storage allocation, use the nobackup folder in there.
+workDir = '/path/to/intermediate/nobackup/nxf-work'
+// Resume analysis from the last complete process executions (not from the beginning).
 resume = true
+
+/* Uncomment to enable workflow reporting
+// Workflow reporting
+timeline {
+    enabled = true
+    file = "${params.results}/pipeline_info/execution_timeline.html"
+}
+report {
+    enabled = true
+    file = "${params.results}/pipeline_info/execution_report.html"
+}
+trace {
+    enabled = true
+    file = "${params.results}/pipeline_info/execution_trace.txt"
+}
+dag {
+    enabled = true
+    file = "${params.results}/pipeline_info/pipeline_dag.svg"
+}
+*/
