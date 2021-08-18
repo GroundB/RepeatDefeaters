@@ -22,48 +22,48 @@ workflow {
         // Analysis:
         // Step 1: Change Fasta headers
         RENAME_REPEAT_MODELER_SEQUENCES(
-            file(params.repeat_modeler_fasta,
-                checkIfExists:true),
-            params.species_short_name)
+            file( params.repeat_modeler_fasta,
+                checkIfExists:true ),
+            params.species_short_name )
         ch_versions = RENAME_REPEAT_MODELER_SEQUENCES.out.versions
         // Step 2: Get ID's of PFAM Proteins with TE domains
         protein_te_domain_list = Channel.empty()
-        if (params.pfam_proteins_with_te_domain_list){
-            protein_te_domain_list = file(params.pfam_proteins_with_te_domain_list, checkIfExists:true)
+        if ( params.pfam_proteins_with_te_domain_list ){
+            protein_te_domain_list = file( params.pfam_proteins_with_te_domain_list, checkIfExists:true )
         } else {
             PFAM_TRANSPOSIBLE_ELEMENT_SEARCH(
-                file(params.pfam_a_db, checkIfExists:true),
-                file(params.transposon_keywords, checkIfExists:true))
+                file( params.pfam_a_db, checkIfExists:true ),
+                file( params.transposon_keywords, checkIfExists:true ) )
             protein_te_domain_list = PFAM_TRANSPOSIBLE_ELEMENT_SEARCH.out.te_domain_proteins
-            ch_versions.mix(PFAM_TRANSPOSIBLE_ELEMENT_SEARCH.out.versions)
+            ch_versions.mix( PFAM_TRANSPOSIBLE_ELEMENT_SEARCH.out.versions )
         }
         // Step 3: Strand specific Blast search of Repeats against
         // a protein reference database
-        MAKEBLASTDB(file(params.protein_reference, checkIfExists:true))
-        BLASTX(
-            RENAME_REPEAT_MODELER_SEQUENCES.out.fasta,
+        MAKEBLASTDB( file( params.protein_reference, checkIfExists:true) )
+        BLASTX( RENAME_REPEAT_MODELER_SEQUENCES.out.fasta,
             MAKEBLASTDB.out.db,
-            ['plus','minus'])
+            ['plus','minus'] )
         // Step 4: Scan Repeats for PFAM domains
-        PFAM_SCAN(BLASTX.out.fasta,
+        PFAM_SCAN( BLASTX.out.fasta,
             Channel.fromPath(
                 [params.pfam_hmm_db, params.pfam_hmm_dat],
-                checkIfExists:true).collect())
+                checkIfExists:true).collect() )
         // Step 5: Reannoate Fasta headers to emphasize
         // repeats with single-stranded non-TE domains
-        ANNOTATION(RENAME_REPEAT_MODELER_SEQUENCES.out.fasta,
+        ANNOTATION( RENAME_REPEAT_MODELER_SEQUENCES.out.fasta,
             PFAM_SCAN.out.pfam_table.collect(),
             protein_te_domain_list,
-            params.species_short_name)
+            params.species_short_name )
 
         // Report: Record software versions
-        ch_versions.mix(MAKEBLASTDB.out.versions,
+        ch_versions.mix( MAKEBLASTDB.out.versions,
             BLASTX.out.versions.first(),
             PFAM_SCAN.out.versions.first(),
-            ANNOTATION.out.versions)
-            .collectFile(name:"software_versions.yml",
-                cache:false,
-                storeDir:"${params.results}/pipeline_info")
+            ANNOTATION.out.versions )
+            .collectFile( name: "software_versions.yml",
+                cache: false,
+                sort: true,
+                storeDir: "${params.results}/pipeline_info")
 
 }
 
