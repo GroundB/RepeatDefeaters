@@ -3,7 +3,6 @@
 // Enable DSL2 syntax for Nextflow
 nextflow.enable.dsl = 2
 
-// Print parameters to screen before running workflow.
 log.info("""
 NBIS support 5861
 
@@ -16,14 +15,18 @@ if(workflow.profile == "uppmax" && !params.project){
     exit 1, "Please provide a SNIC project number ( --project )!\n"
 }
 
-// The main workflow
+// The primary analysis workflow
 workflow {
 
     main:
+        // Analysis:
+        // Step 1: Change Fasta headers
         RENAME_REPEAT_MODELER_SEQUENCES(
-            file(params.repeat_modeler_fasta, checkIfExists:true),
+            file(params.repeat_modeler_fasta,
+                checkIfExists:true),
             params.species_short_name)
         ch_versions = RENAME_REPEAT_MODELER_SEQUENCES.out.versions
+        // Step 2: Get ID's of PFAM Proteins with TE domains
         protein_te_domain_list = Channel.empty()
         if (params.pfam_proteins_with_te_domain_list){
             protein_te_domain_list = file(params.pfam_proteins_with_te_domain_list, checkIfExists:true)
@@ -34,20 +37,26 @@ workflow {
             protein_te_domain_list = PFAM_TRANSPOSIBLE_ELEMENT_SEARCH.out.te_domain_proteins
             ch_versions.mix(PFAM_TRANSPOSIBLE_ELEMENT_SEARCH.out.versions)
         }
-        MAKEBLASTDB(
-            file(params.protein_reference, checkIfExists:true))
+        // Step 3: Strand specific Blast search of Repeats against
+        // a protein reference database
+        MAKEBLASTDB(file(params.protein_reference, checkIfExists:true))
         BLASTX(
             RENAME_REPEAT_MODELER_SEQUENCES.out.fasta,
             MAKEBLASTDB.out.db,
             ['plus','minus'])
+        // Step 4: Scan Repeats for PFAM domains
         PFAM_SCAN(BLASTX.out.fasta,
             Channel.fromPath(
                 [params.pfam_hmm_db, params.pfam_hmm_dat],
                 checkIfExists:true).collect())
+        // Step 5: Reannoate Fasta headers to emphasize
+        // repeats with single-stranded non-TE domains
         ANNOTATION(RENAME_REPEAT_MODELER_SEQUENCES.out.fasta,
             PFAM_SCAN.out.pfam_table.collect(),
             protein_te_domain_list,
             params.species_short_name)
+
+        // Report: Record software versions
         ch_versions.mix(MAKEBLASTDB.out.versions,
             BLASTX.out.versions.first(),
             PFAM_SCAN.out.versions.first(),
