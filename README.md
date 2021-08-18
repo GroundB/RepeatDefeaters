@@ -1,5 +1,6 @@
 ## RepeatDefeaters - Utilities for unclassified consensus sequences
-### Table of Contents
+
+## Table of Contents
 -   **Introduction**
     -   [Motivation](#motivation)
     -   [Key features](#key-features)
@@ -14,64 +15,56 @@
     -   [TE Accessions](#teaccs)
     -   [TE HMMs](#TEHMMs)
 
-### Introduction
-#### Motivation
-For non-model organisms that got sequenced recently, repeat discovery tools often fail to classify a large portion of their repeats. These unclassified repeats can be host genes that were duplicated or TEs that are just not present in the databases. It is misleading if host genes are included in analyses designed for TEs. But some studies had done that. That's why RepeatDefeaters provides a more transparent set of rules on what to be considered to be host or TEs.
+## Introduction
 
-One of the other critical tasks during repeat discovery is to accurately annotate transposable elements (TEs), which can be challenging for new organisms that have few references to compare with. RepeatDefeaters aims to provide an easy-to-follow guideline on how to tackle these consensus sequences that are difficult to be classified automatically.
+### Motivation
 
-Repeat annotations shall not stay as black boxes any longer.
-#### Key features
+For recently sequenced non-model organisms, repeat discovery tools
+often fail to classify a large portion of their repeats. These
+unclassified repeats can be host genes that were duplicated, or TEs
+that are just not present in the databases. Analyses of Transposable
+Elements (TE) can be misleading if host genes are present.
+RepeatDefeaters is a tool to further classify which repeats should
+be considered host genes or TEs.
+
+A critical task during repeat discovery is to accurately annotate
+TEs. This can be challenging for new organisms that have few
+references to compare with. RepeatDefeaters aims to provide an
+easy-to-follow guideline on how to tackle these consensus sequences
+that are difficult to classify automatically.
+
+### Key features
+
 RepeatDefeaters provides:
-1. utilities that work together to determine If your consensus sequence of interest is related to TE activities
-2. a more comprehensive collection of Hidden Markov Models (HMMs) for TE proteins
-### Dependencies
-#### Databases
-Please download files from their FTP site.
+1. Utilities that work together to determine if your consensus
+sequence of interest is related to TE activity.
+
+## Usage
+
+Usage:
 ```bash
-#For Pfam release 32.0
-wget ftp://ftp.ebi.ac.uk/pub/databases/Pfam/releases/Pfam32.0/Pfam-A.hmm.gz
-gunzip Pfam-A.hmm.gz
-#You also need the Pfam-A.full.uniprot.gz for searching transposon related synonyms
-wget ftp://ftp.ebi.ac.uk/pub/databases/Pfam/releases/Pfam32.0/Pfam-A.full.uniprot.gz
-gunzip Pfam-A.full.uniprot.gz
-#Non-redundant TREP nucleotide sequences are required
-wget http://botserv2.uzh.ch/kelldata/trep-db/downloads/trep-db_nr_Rel-19.fasta.gz
-gunzip trep-db_nr_Rel-19.fasta.gz
-```
-#### Blast
-blastx is used to predict amino acid sequences from consensus sequences of repeats.
-
-blastn is used to search consensus sequences against the TREP nt database.
-
-Version 2.6.0+
-
-Link to the software: https://ftp.ncbi.nlm.nih.gov/blast/executables/blast+/2.6.0/
-```bash
-sudo apt-get update
-sudo apt install ncbi-blast+
+nextflow run -c <parameter.config> [-profile <executor profile>] GroundB/RepeatDefeaters
 ```
 
-#### HMMER3
-HMMER3 was used to build HMMs from TE protein alignments.
+where:
+- `<parameter.config>` is a nextflow configuration file with providing
+    paths to the input data
+- `<executor profile>` is one of the preconfigured execution profiles
+    (`uppmax`, `singularity_local`, `docker_local`). Alternatively,
+    you can provide a custom configuration to configure this workflow
+    to your execution environment. See [Nextflow Configuration](https://www.nextflow.io/docs/latest/config.html#scope-executor)
+    for more details.
 
-HMMER3 is also needed to search amino acid predictions against HMMs of TE proteins.
+### Dependancies
 
-```bash
-sudo apt install build-essential
-wget http://eddylab.org/software/hmmer/hmmer-3.3.tar.gz
-tar -xvf hmmer-3.3.tar.gz
-cd /hmmer-3.3
-./configure
-make install
-```
+- [Nextflow](Nextflow.io/): A workflow manager. It can be installed
+    into a custom conda environment (recommended), or directly
+    into your bin.
+- Package Manager: One of the following.
+    - [Docker](https://www.docker.com/): A container platform
+    - [Singularity](https://sylabs.io/singularity/):
+    - [Conda](https://docs.conda.io/en/latest/miniconda.html):
 
-#### PfamScan
-The perl script pfam_scan.pl from PfamScan1.5 was used to search predicted amino acid sequences to the Pfam database.
-```bash
-#Download PfamScan1.5
-conda install -c bioconda pfam_scan
-```
 ##  Mechanism
 In addition to stringent nucleotide searches against the TREP database, RepeatDefeaters finds TE proteins in provided consensus sequences, giving clues about the consensus sequence. After getting a hint, the consensus sequence can be compared with the literature and subsequently curated.
 
