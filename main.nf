@@ -81,7 +81,7 @@ process RENAME_REPEAT_MODELER_SEQUENCES {
 
     cat <<-END_VERSIONS > versions.yml
     RENAME_REPEAT_MODELER_SEQUENCES:
-        perl : \$( perl --version )
+        perl : \$( perl -v |& sed '/This is perl/!d; s/.*\\(v[0-9]\\+\\.[0-9]\\+\\.[0-9]\\+\\).*/\\1/' )
     END_VERSIONS
     """
 }
@@ -112,10 +112,10 @@ process PFAM_TRANSPOSIBLE_ELEMENT_SEARCH {
 
     cat <<-END_VERSIONS > versions.yml
     PFAM_TRANSPOSIBLE_ELEMENT_SEARCH:
-        zgrep: \$( zgrep --version )
-        awk  : \$( awk --version   )
-        uniq : \$( uniq --version  )
-        cut  : \$( cut --version   )
+        awk  : \$( awk  -W version |& head -n1 )
+        cut  : \$( cut   --version |& head -n1 )
+        uniq : \$( uniq  --version |& head -n1 )
+        zgrep: \$( zgrep --version |& head -n1 )
     END_VERSIONS
     """
 }
@@ -205,7 +205,7 @@ process BLASTX {
     cat <<-END_VERSIONS > versions.yml
     BLASTX:
         blastx: \$( blastx -version | sed -e '/^blastx:/!d; s/^.*blastx: //' )
-        awk   : \$( awk --version )
+        awk   : \$( awk |& head -n1 | sed 's/(.*//' )
     END_VERSIONS
     """
 
@@ -250,7 +250,7 @@ process PFAM_SCAN {
 
     cat <<-END_VERSIONS > versions.yml
     PFAM_SCAN:
-        pfam_scan: \$( pfam_scan.pl --version )
+        pfam_scan: 1.6
     END_VERSIONS
     """
 
@@ -343,12 +343,15 @@ process ANNOTATION {
 
     cat <<-END_VERSIONS > versions.yml
     ANNOTATION:
-        grep : \$( grep --version )
-        tee  : \$( tee --version  )
-        awk  : \$( awk --version  )
-        uniq : \$( uniq --version )
-        cut  : \$( cut --version  )
-        sed  : \$( sed --version  )
+        awk  : \$( awk  -W version |& head -n1 )
+        cat  : \$( cat   --version |& head -n1 )
+        cut  : \$( cut   --version |& head -n1 )
+        grep : \$( grep  --version |& head -n1 )
+        paste: \$( paste --version |& head -n1 )
+        sed  : \$( sed   --version |& head -n1 )
+        sort : \$( sort  --version |& head -n1 )
+        tee  : \$( tee   --version |& head -n1 )
+        uniq : \$( uniq  --version |& head -n1 )
     END_VERSIONS
     """
 }
