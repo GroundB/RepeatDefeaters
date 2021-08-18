@@ -109,15 +109,16 @@ process PFAM_TRANSPOSIBLE_ELEMENT_SEARCH {
     path keywords
 
     output:
-    path "Pfam.TE.accessions", emit: te_domain_proteins
-    path "versions.yml"      , emit: versions
+    path "Pfam.Proteins_wTE_Domains.seqid", emit: te_domain_proteins
+    path "versions.yml"                   , emit: versions
 
     script:
     """
     # Search for keywords and IDs
     zgrep -i -e "^#=GF ID" -f $keywords $uniprot_db > pattern_matches.txt
     # Print closest ID above keyword match
-    awk '{ if (\$0 ~ /#=GF ID/) { id_line = \$0 } else { print id_line } }' pattern_matches.txt | uniq | cut -c11- > Pfam.TE.accessions
+    awk '{ if (\$0 ~ /#=GF ID/) { id_line = \$0 } else { print id_line } }' pattern_matches.txt | \\
+        uniq | cut -c11- > Pfam.Proteins_wTE_Domains.seqid
 
     cat <<-END_VERSIONS > versions.yml
     PFAM_TRANSPOSIBLE_ELEMENT_SEARCH:
