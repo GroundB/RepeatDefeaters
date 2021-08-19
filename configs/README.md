@@ -9,13 +9,7 @@ The `compute_resources.config` file contains
 the specification of cluster resources to request
 from the cluster queue manager.
 
-The `singularity_packages.config` file contains
-the specification of how to load singularity images. This
-is separated from the `compute_resources.config`
-to allow flexibility with how packages are loaded.
-My preference is to stick to using containers,
-however packages can also be loaded using conda,
-or the module system.
-
-The configuration file for MultiQC is also kept
-here.
+The `modules.config` file contains default
+parameters for tools used in the workflow.
+They can be overridden in a custom config to
+provide alternative parameters to specific tools.
