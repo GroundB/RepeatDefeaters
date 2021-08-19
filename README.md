@@ -47,8 +47,10 @@ nextflow run -c <parameter.config> [-profile <executor profile>] GroundB/RepeatD
 ```
 
 where:
-- `<parameter.config>` is a nextflow configuration file with providing
-    paths to the input data
+- `<parameter.config>` is a nextflow configuration file which provides
+    paths to the input data (see [params.config template](params.config.TEMPLATE)).
+    Alternatively parameters can be provided on the
+    command-line using the `--parameter` notation (e.g., `--species_short_name <str>` ).
 - `<executor profile>` is one of the preconfigured execution profiles
     (`uppmax`, `singularity_local`, `docker_local`). Alternatively,
     you can provide a custom configuration to configure this workflow
@@ -59,7 +61,8 @@ where:
 
 - [Nextflow](Nextflow.io/): A workflow manager. It can be installed
     into a custom conda environment (recommended), or directly
-    into your bin.
+    into your bin. A conda environment file (nextflow_conda-env.yml) is
+    provided to create the environment.
 - Package Manager: One of the following.
     - [Docker](https://www.docker.com/): A container platform
     - [Singularity](https://sylabs.io/singularity/):
