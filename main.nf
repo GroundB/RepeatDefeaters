@@ -69,6 +69,8 @@ workflow {
 
 process RENAME_REPEAT_MODELER_SEQUENCES {
 
+    publishDir "${params.results}/01_Renamed_Repeat_modeler_sequences", mode: params.publish_mode
+
     conda (params.enable_conda ? 'conda-forge::sed=4.7' : null)
     if (workflow.containerEngine == 'singularity' && !params.singularity_pull_docker_container) {
         container 'https://containers.biocontainers.pro/s3/SingImgsRepo/biocontainers/v1.2.0_cv1/biocontainers_v1.2.0_cv1.img'
@@ -96,6 +98,8 @@ process RENAME_REPEAT_MODELER_SEQUENCES {
 }
 
 process PFAM_TRANSPOSIBLE_ELEMENT_SEARCH {
+
+    publishDir "${params.results}/02_Pfam_TE_IDs", mode: params.publish_mode
 
     conda (params.enable_conda ? 'conda-forge::sed=4.7' : null)
     if (workflow.containerEngine == 'singularity' && !params.singularity_pull_docker_container) {
@@ -165,6 +169,8 @@ process MAKEBLASTDB {
 
 process BLASTX {
 
+    publishDir "${params.results}/03_Blastx", mode: params.publish_mode
+
     conda (params.enable_conda ? 'bioconda::blast=2.10.1' : null)
     if (workflow.containerEngine == 'singularity' && !params.singularity_pull_docker_container) {
         container 'https://depot.galaxyproject.org/singularity/blast:2.10.1--pl526he19e7b1_3'
@@ -223,6 +229,8 @@ process BLASTX {
 
 process PFAM_SCAN {
 
+    publishDir "${params.results}/04_Pfam_scan", mode: params.publish_mode
+
     conda (params.enable_conda ? 'bioconda::pfam_scan==1.6' : null)
     if (workflow.containerEngine == 'singularity' && !params.singularity_pull_docker_container) {
         container 'https://depot.galaxyproject.org/singularity/pfam_scan:1.6--hdfd78af_4'
@@ -267,6 +275,8 @@ process PFAM_SCAN {
 }
 
 process ANNOTATION {
+
+    publishDir "${params.results}/05_Reannotated_Repeat_modeler_sequences", mode: params.publish_mode
 
     conda (params.enable_conda ? 'conda-forge::sed=4.7' : null)
     if (workflow.containerEngine == 'singularity' && !params.singularity_pull_docker_container) {
