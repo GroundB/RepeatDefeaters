@@ -9,6 +9,7 @@
 - [**Usage**](#usage)
     - [Dependancies](#dependancies)
     - [Customisation for Uppmax](#customisation-for-uppmax)
+
 ## Introduction
 
 ### Motivation
@@ -46,7 +47,8 @@ The list can be found under `assets/Pfam_R32.Proteins_wTE_Domains.seqid`.
 
 By setting the workflow parameter `pfam_proteins_with_te_domain_list`
 in the `params` configuration block, the
-`PFAM_TRANSPOSIBLE_ELEMENT_SEARCH` can be skipped to save computation time.
+`PFAM_TRANSPOSIBLE_ELEMENT_SEARCH` process can be skipped to
+save computation time.
 ```nextflow
 pfam_proteins_with_te_domain_list = "$baseDir/assets/Pfam_R32.Proteins_wTE_Domains.seqid"
 ```
