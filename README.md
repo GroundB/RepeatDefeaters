@@ -1,16 +1,18 @@
 ## RepeatDefeaters - Utilities for unclassified consensus sequences
 
 ## Table of Contents
-- [**Introduction**](#introduction)
+- [**Overview**](#overview)
     - [Motivation](#motivation)
     - [Key features](#key-features)
     - [TE activity](#te-activity)
 
 - [**Usage**](#usage)
     - [Dependancies](#dependancies)
+    - [Workflow inputs](#workflow-inputs)
+    - [Workflow outputs](#workflow-outputs)
     - [Customisation for Uppmax](#customisation-for-uppmax)
 
-## Introduction
+## Overview
 
 ### Motivation
 
@@ -55,6 +57,13 @@ pfam_proteins_with_te_domain_list = "$baseDir/assets/Pfam_R32.Proteins_wTE_Domai
 
 ## Usage
 
+This workflow has been designed with portability and reproducibility in
+mind. The workflow is implemented using the workflow manager Nextflow
+which supports a wide range of execution platforms, from local
+execution, to HPC and the cloud. Software package managers are
+used to bundle software dependancies to ensure programs work in the
+same manner across different execution platforms.
+
 Usage:
 ```bash
 nextflow run -c <parameter.config> [-profile <executor profile>] GroundB/RepeatDefeaters
@@ -73,7 +82,7 @@ where:
 
 ### Dependancies
 
-- [Nextflow](Nextflow.io/): A workflow manager. It can be installed
+- [Nextflow](Nextflow.io/): It can be installed
     into a custom conda environment (recommended), or directly
     into your bin. A conda environment file (nextflow_conda-env.yml) is
     provided to create a running environment with the necessary
@@ -84,6 +93,97 @@ where:
     more commonly used on multi-user HPC environments.
     - [Conda](https://docs.conda.io/en/latest/miniconda.html): A package
     manager, which is operating system dependent.
+
+### Workflow inputs
+
+Mandatory:
+
+- `repeat_modeler_fasta`: The consensus sequences from Repeat Modeler.
+- `species_short_name`: A label based on the species name, used in naming sequences and output.
+
+Optional:
+
+- `results`: The path to the results folder (default: `results` in the
+executing directory).
+- `publish_mode`: (values: `'symlink'` (default), `'copy'`) The file
+publishing method from the intermediate results folders (see [Table of publish modes](https://www.nextflow.io/docs/latest/process.html#publishdir)).
+
+- `protein reference`: Default is the SwissProt + other sequences database.
+- `transposon_keywords`: Default path is `<workflow_dir>/assets/pfam_te_domain_keywords.txt`. This file should not include empty lines, including newlines at the end of a file.
+- `pfam_proteins_with_te_domain_list`: Default is unset. When set
+this skips the `PFAM_TRANSPOSIBLE_ELEMENT_SEARCH` process, and uses
+the Pfam protein sequence ids provided in this list. A list of sequence
+ids (`Pfam_R32.Proteins_wTE_Domains.seqid`) for the default keywords are provided in the `assets` folder.
+- `pfam_release_path`: Path to the Pfam ftp folder containing the various pfam files necessary in this workflow.
+- `pfam_hmm_db`: The Pfam HMM database (default:`${pfam_release_path}/Pfam-A.hmm.gz`).
+- `pfam_hmm_dat`: The Pfam HMM dat file (default:`${pfam_release_path}/Pfam-A.hmm.dat.gz`).
+- `pfam_a_db`: The Pfam A database (default:`${pfam_release_path}/Pfam-A.full.uniprot.gz`).
+
+Workflow package manager options:
+
+- `enable_conda`: Enables the use of conda as the package manager (default:`false`).
+- `singularity_pull_docker_container`: Construct Singularity images from
+the Docker image instead of pulling existing Singularity image (default:`false`).
+
+Uppmax cluster options:
+
+- `project`: SNIC Compute project allocation.
+- `clusterOptions`: Additional Uppmax slurm cluster options (e.g., `-C fat`).
+
+Tool specific customisation:
+
+The tools `makeblastdb`, `blastx`, and `pfam` can have their
+parameters modified by altering their module specific configuration
+in your `params.config` file.
+
+For example, to override the parameters to `blastx` ( found in
+`configs/modules.config`), add the following block to your parameter
+configuration file.
+```
+params {
+
+    <workflow parameters>
+    ...
+
+    modules {
+        'blastx' {
+            // Increase max target sequences from 1 to 5
+            args = '-max_target_seqs 5 -evalue 1e-10'
+        }
+    }
+}
+
+<other configuration options>
+...
+```
+
+### Workflow outputs
+
+Output folders: (subfolders in the folder provided by the `results` parameter).
+
+- `01_Renamed_Repeat_modeler_sequences`:
+    - `${short_species_name}.fasta`: Fasta file containing the renamed fasta sequences.
+- `02_Pfam_TE_IDs`:
+    - `Pfam.Proteins_wTE_Domains.seqid`: List of Pfam protein sequence IDs with TE activity.
+- `03_Blastx`:
+    - `*.{plus,minus}.blastx.tsv`: Strand-specific tab separated file of Protein sequence IDs and the sequence with a blast match to the `protein_reference`.
+    - `*.{plus,minus}.predicted.fasta`: Strand-specific fasta of
+    the sequences in the blast output.
+- `04_Pfam_scan`:
+    - `*.pfamtbl`: Pfam search of HMM domains against the blast sequences.
+- `05_Reannotated_Repeat_modeler_sequences`:
+    - `*.renamed.fasta`: Reannotated fasta of sequences with strand specific non-TE domains.
+    - `*.Unclassified_consensus_TEs`: List of sequences with TE domains.
+    - `*.consensus.both.strand`: List of sequences with non-TE domains on both strands.
+- `pipeline_info`:
+    - `versions.yml`: YAML file containing a list of software versions used
+    in each process.
+    - `execution_timeline.html`: If enabled in the `params.config`, an execution timeline of the workflow.
+    - `execution_report.html`: If enabled in the `params.config`, a
+    report of the resources used during the execution of the workflow.
+    - `execution_trace.txt`: If enabled in the `params.config`, a trace of the workflow execution.
+    - `pipeline_dag.svg`: If enabled in the `params.config`, an image
+    of the workflow execution graph (which processes follow which).
 
 ### Customisation for Uppmax.
 
