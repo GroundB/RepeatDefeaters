@@ -26,13 +26,11 @@ publish_mode : 'copy' # values: 'symlink', 'copy'
 ## Path to PFAM accession list of proteins with TE domains (skips PFAM_TRANSPOSIBLE_ELEMENT_SEARCH process)
 # pfam_proteins_with_te_domain_list : ''
 # pfam_proteins_with_te_domain_list : "$baseDir/assets/Pfam_R32.Proteins_wTE_Domains.seqid"
-## PFAM database path
-# pfam_release_path : 'ftp://ftp.ebi.ac.uk/pub/databases/Pfam/releases/Pfam32.0/'
 ## PFAM HMM database path
-# pfam_hmm_db  : "${params.pfam_release_path}/Pfam-A.hmm.gz"
-# pfam_hmm_dat : "${params.pfam_release_path}/Pfam-A.hmm.dat.gz"
+# pfam_hmm_db  : "ftp://ftp.ebi.ac.uk/pub/databases/Pfam/releases/Pfam32.0/Pfam-A.hmm.gz"
+# pfam_hmm_dat : "ftp://ftp.ebi.ac.uk/pub/databases/Pfam/releases/Pfam32.0/Pfam-A.hmm.dat.gz"
 ## PFAM-A database path
-# pfam_a_db : "${params.pfam_release_path}/Pfam-A.full.uniprot.gz"
+# pfam_a_db : "ftp://ftp.ebi.ac.uk/pub/databases/Pfam/releases/Pfam32.0/Pfam-A.full.uniprot.gz"
 
 ## Workflow package manager configuration
 ## Use conda instead of containers
