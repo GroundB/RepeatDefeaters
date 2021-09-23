@@ -77,7 +77,7 @@ where:
     Alternatively parameters can be provided on the
     command-line using the `--parameter` notation (e.g., `--species_short_name <str>` ).
 - `<custom.config>` is a nextflow configuration file which provides
-    additional configuration (see the [params.config template](custom.config.TEMPLATE)).
+    additional configuration (see the [custom.config template](custom.config.TEMPLATE)).
 - `<executor profile>` is one of the preconfigured execution profiles
     (`uppmax`, `singularity_local`, `docker_local`). Alternatively,
     you can provide a custom configuration to configure this workflow
