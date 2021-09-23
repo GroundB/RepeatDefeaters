@@ -66,14 +66,18 @@ same manner across different execution platforms.
 
 Usage:
 ```bash
-nextflow run -c <parameter.config> [-profile <executor profile>] GroundB/RepeatDefeaters
+nextflow run -params-file params.yml  [ -c <custom.config> ] [-profile <executor profile>] GroundB/RepeatDefeaters
 ```
 
 where:
-- `<parameter.config>` is a nextflow configuration file which provides
-    paths to the input data (see the [params.config template](params.config.TEMPLATE)).
+- `params.yml` is a YAML formatted file containing workflow parameters
+    such as input paths to the data.
+    A [params.yml template](params.yml.TEMPLATE) is provided to copy
+    for convenience.
     Alternatively parameters can be provided on the
     command-line using the `--parameter` notation (e.g., `--species_short_name <str>` ).
+- `<custom.config>` is a nextflow configuration file which provides
+    additional configuration (see the [params.config template](custom.config.TEMPLATE)).
 - `<executor profile>` is one of the preconfigured execution profiles
     (`uppmax`, `singularity_local`, `docker_local`). Alternatively,
     you can provide a custom configuration to configure this workflow
@@ -108,8 +112,11 @@ executing directory).
 - `publish_mode`: (values: `'symlink'` (default), `'copy'`) The file
 publishing method from the intermediate results folders (see [Table of publish modes](https://www.nextflow.io/docs/latest/process.html#publishdir)).
 
-- `protein reference`: Default is the SwissProt + other sequences database.
-- `transposon_keywords`: Default path is `<workflow_dir>/assets/pfam_te_domain_keywords.txt`. This file should not include empty lines, including newlines at the end of a file.
+- `protein reference`: Default is the SwissProt database. Additional references can be added using the params.yml file.
+- `transposon_keywords`: Default path is `<workflow_dir>/assets/pfam_te_domain_keywords.txt`. It contains a list of regular expressions
+to identify proteins with TE domains. This file should not include empty lines, including newlines at the end of a file.
+- `transposon_blacklist`: Default path is `<workflow_dir>/assets/te_domain_keyword_blacklist.txt`. It contains a list of regular
+expressions of protein names to exclude. This file should not include empty lines, including newlines at the end of a file.
 - `pfam_proteins_with_te_domain_list`: Default is unset. When set
 this skips the `PFAM_TRANSPOSIBLE_ELEMENT_SEARCH` process, and uses
 the Pfam protein sequence ids provided in this list. A list of sequence
