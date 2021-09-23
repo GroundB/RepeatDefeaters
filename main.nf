@@ -47,7 +47,7 @@ workflow {
                     checkIfExists: true
                 ),
                 file (
-                    params.transposon_whitelist,
+                    params.transposon_blacklist,
                     checkIfExists: true
                 )
             )
@@ -152,7 +152,7 @@ process PFAM_TRANSPOSIBLE_ELEMENT_SEARCH {
     input:
     path uniprot_db             // Compressed db
     path keywords
-    path whitelist
+    path blacklist
 
     output:
     path "Pfam.Proteins_wTE_Domains.seqid", emit: te_domain_proteins
@@ -162,8 +162,8 @@ process PFAM_TRANSPOSIBLE_ELEMENT_SEARCH {
     """
     # Search for keywords and IDs
     zgrep -i -e "^#=GF ID" -f $keywords $uniprot_db > pattern_matches.txt
-    # Remove whitelisted keywords
-    grep -i -f $whitelist pattern_matches.txt > pattern_matches_revised.txt
+    # Remove blacklisted keywords
+    grep -i -v -f $blacklist pattern_matches.txt > pattern_matches_revised.txt
     # Print closest ID above keyword match
     awk '{
         if (\$0 ~ /#=GF ID/) {
