@@ -144,6 +144,7 @@ process PFAM_TRANSPOSIBLE_ELEMENT_SEARCH {
     input:
     path uniprot_db             // Compressed db
     path keywords
+    path whitelist
 
     output:
     path "Pfam.Proteins_wTE_Domains.seqid", emit: te_domain_proteins
@@ -153,8 +154,16 @@ process PFAM_TRANSPOSIBLE_ELEMENT_SEARCH {
     """
     # Search for keywords and IDs
     zgrep -i -e "^#=GF ID" -f $keywords $uniprot_db > pattern_matches.txt
+    # Remove whitelisted keywords
+    grep -i -f $whitelist pattern_matches.txt > pattern_matches_revised.txt
     # Print closest ID above keyword match
-    awk '{ if (\$0 ~ /#=GF ID/) { id_line = \$0 } else { print id_line } }' pattern_matches.txt | \\
+    awk '{
+        if (\$0 ~ /#=GF ID/) {
+            id_line = \$0
+        } else {
+            print id_line
+        }
+    }' pattern_matches_revised.txt | \\
         uniq | cut -c11- > Pfam.Proteins_wTE_Domains.seqid
 
     cat <<-END_VERSIONS > versions.yml
