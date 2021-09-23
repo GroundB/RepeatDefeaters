@@ -122,9 +122,9 @@ this skips the `PFAM_TRANSPOSIBLE_ELEMENT_SEARCH` process, and uses
 the Pfam protein sequence ids provided in this list. A list of sequence
 ids (`Pfam_R32.Proteins_wTE_Domains.seqid`) for the default keywords are provided in the `assets` folder.
 - `pfam_release_path`: Path to the Pfam ftp folder containing the various pfam files necessary in this workflow.
-- `pfam_hmm_db`: The Pfam HMM database (default:`${pfam_release_path}/Pfam-A.hmm.gz`).
-- `pfam_hmm_dat`: The Pfam HMM dat file (default:`${pfam_release_path}/Pfam-A.hmm.dat.gz`).
-- `pfam_a_db`: The Pfam A database (default:`${pfam_release_path}/Pfam-A.full.uniprot.gz`).
+- `pfam_hmm_db`: The Pfam HMM database (default:`${params.pfam_release_path}/Pfam-A.hmm.gz`).
+- `pfam_hmm_dat`: The Pfam HMM dat file (default:`${params.pfam_release_path}/Pfam-A.hmm.dat.gz`).
+- `pfam_a_db`: The Pfam A database (default:`${params.pfam_release_path}/Pfam-A.full.uniprot.gz`).
 
 Workflow package manager options:
 
