@@ -1,0 +1,50 @@
+## Workflow inputs
+## The absolute path (full path, begins with / ) to the input data
+## Repeat modeler library
+repeat_modeler_fasta : ''
+## Species short name for renaming sequences
+species_short_name : ''
+
+## Workflow outputs
+## The absolute path (full path, begins with / ) to the results folder
+results : 'results'
+## Mode of copying results from the work directory
+## 'symlink' : Use for test data.
+## 'copy'    : Use for full analysis data.
+publish_mode : 'copy' # values: 'symlink', 'copy'
+
+## Optional inputs (Remove # to uncomment)
+## protein reference
+# protein_reference :
+#    - 'https://ftp.uniprot.org/pub/databases/uniprot/current_release/knowledgebase/complete/uniprot_sprot.fasta.gz'
+#    - '<additional reference1>'
+#    - '<additional reference2>'
+## Path to key words (Describes PFAM entries with TE domains)
+# transposon_keywords : "$baseDir/assets/pfam_te_domain_keywords.txt"
+## Path to key words blacklist (Describes PFAM entries with TE domains that should be removed)
+# transposon_blacklist : "$baseDir/assets/te_domain_keyword_blacklist.txt"
+## Path to PFAM accession list of proteins with TE domains (skips PFAM_TRANSPOSIBLE_ELEMENT_SEARCH process)
+# pfam_proteins_with_te_domain_list : ''
+# pfam_proteins_with_te_domain_list : "$baseDir/assets/Pfam_R32.Proteins_wTE_Domains.seqid"
+## PFAM database path
+# pfam_release_path : 'ftp://ftp.ebi.ac.uk/pub/databases/Pfam/releases/Pfam32.0/'
+## PFAM HMM database path
+# pfam_hmm_db  : "${pfam_release_path}/Pfam-A.hmm.gz"
+# pfam_hmm_dat : "${pfam_release_path}/Pfam-A.hmm.dat.gz"
+## PFAM-A database path
+# pfam_a_db : "${pfam_release_path}/Pfam-A.full.uniprot.gz"
+## TREP database path
+# trep_db : 'http://botserv2.uzh.ch/kelldata/trep-db/downloads/trep-db_nr_Rel-19.fasta.gz'
+
+## Workflow package manager configuration
+## Use conda instead of containers
+# enable_conda : false
+## When using singularity, construct image from a docker image
+# singularity_pull_docker_container : false
+
+## Uppmax cluster configuration
+## UPPMAX project - Needed only when running on an UPPMAX cluster
+# project : ''
+## Convenience for adding additional cluster options to UPPMAX
+# clusterOptions : ''
+
