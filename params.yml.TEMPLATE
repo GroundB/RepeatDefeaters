@@ -33,8 +33,6 @@ publish_mode : 'copy' # values: 'symlink', 'copy'
 # pfam_hmm_dat : "${pfam_release_path}/Pfam-A.hmm.dat.gz"
 ## PFAM-A database path
 # pfam_a_db : "${pfam_release_path}/Pfam-A.full.uniprot.gz"
-## TREP database path
-# trep_db : 'http://botserv2.uzh.ch/kelldata/trep-db/downloads/trep-db_nr_Rel-19.fasta.gz'
 
 ## Workflow package manager configuration
 ## Use conda instead of containers
