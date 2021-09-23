@@ -45,6 +45,10 @@ workflow {
                 file(
                     params.transposon_keywords,
                     checkIfExists: true
+                ),
+                file (
+                    params.transposon_whitelist,
+                    checkIfExists: true
                 )
             )
             protein_te_domain_list = PFAM_TRANSPOSIBLE_ELEMENT_SEARCH.out.te_domain_proteins
