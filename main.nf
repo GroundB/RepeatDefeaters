@@ -65,7 +65,7 @@ workflow {
                 checkIfExists: true
             )
             .splitFasta(by: 10000000000)  // Use high number to keep file intact
-            .collectFile(
+            .collectFile(                 // Merge multiple fasta's into one
                 name: 'protein_reference.fasta'
             )
         )
