@@ -60,9 +60,13 @@ workflow {
         // Step 3: Strand specific Blast search of Repeats against
         // a protein reference database
         MAKEBLASTDB(
-            file(
+            Channel.fromPath(
                 params.protein_reference,
                 checkIfExists: true
+            )
+            .splitFasta(by: 10000000000)  // Use high number to keep file intact
+            .collectFile(
+                name: 'protein_reference.fasta'
             )
         )
         BLASTX(
