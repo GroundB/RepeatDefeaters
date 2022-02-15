@@ -8,10 +8,6 @@ species_short_name : ''
 ## Workflow outputs
 ## The absolute path (full path, begins with / ) to the results folder
 results : 'results'
-## Mode of copying results from the work directory
-## 'symlink' : Use for test data.
-## 'copy'    : Use for full analysis data.
-publish_mode : 'copy' # values: 'symlink', 'copy'
 
 ## Optional inputs (Remove # to uncomment)
 ## protein reference
