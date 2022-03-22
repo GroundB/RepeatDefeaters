@@ -174,8 +174,20 @@ workflow {
 
 }
 
+workflow.onComplete {
+    if( workflow.success ){
+        log.info("""
+        Thank you for using our workflow.
 
+        Results are located in the folder: $params.results
+        """)
+    } else {
+        log.info("""
+        The workflow completed unsuccessfully.
 
-
-
-
+        Please read over the error message. If you are unable to solve it, please
+        post an issue at https://github.com/GroundB/RepeatDefeaters/issues
+        where we will do our best to help.
+        """)
+    }
+}
