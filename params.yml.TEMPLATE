@@ -37,6 +37,4 @@ results : 'results'
 ## Uppmax cluster configuration
 ## UPPMAX project - Needed only when running on an UPPMAX cluster
 # project : ''
-## Convenience for adding additional cluster options to UPPMAX
-# clusterOptions : ''
 
