@@ -6,3 +6,19 @@ workDir = '/path/to/intermediate/nobackup/nxf-work'
 
 // Resume analysis from the last complete process executions (not from the beginning).
 resume = true
+
+// Uncomment to skip PFAM_TRANSPOSIBLE_ELEMENT_SEARCH process
+/*
+params {
+    pfam_proteins_with_te_domain_list = "$projectDir/assets/Pfam_R32.Proteins_wTE_Domains.seqid"
+}
+*/
+
+// Example of how to override non-file parameters to tools, e.g. blastn in TREP_BLASTN 
+/*
+process {
+    withName: 'TREP_BLASTN' {
+        ext.args   = '-outfmt 6'
+    }
+}
+*/
