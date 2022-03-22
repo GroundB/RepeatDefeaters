@@ -1,6 +1,8 @@
 // Nextflow configuration
+
 // The absolute path (full path, begins with / ) to the work directory ( where intermediate results are stored )
 // If you have a SNIC Storage allocation, use the nobackup folder in there.
 workDir = '/path/to/intermediate/nobackup/nxf-work'
+
 // Resume analysis from the last complete process executions (not from the beginning).
 resume = true
