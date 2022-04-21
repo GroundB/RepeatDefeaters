@@ -110,7 +110,7 @@ where:
 
 Mandatory:
 
-- `repeat_modeler_fasta`: The consensus sequences from Repeat Modeler.
+- `repeat_modeler_fasta`: The consensus sequences from RepeatModeler2, annotated by RepeatClassifier.
 - `species_short_name`: A label based on the species name, used in naming sequences and output.
 
 Optional:
