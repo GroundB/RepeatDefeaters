@@ -73,7 +73,11 @@ same manner across different execution platforms.
 Usage:
 
 ```bash
-nextflow run -params-file params.yml  [ -c <custom.config> ] [-profile <executor profile>] GroundB/RepeatDefeaters
+nextflow run \
+    -params-file params.yml \
+    [-c <custom.config>] \
+    [-profile <executor profile>] \
+    GroundB/RepeatDefeaters
 ```
 
 where:
@@ -200,7 +204,11 @@ the container technology Singularity to manage software dependancies,
 and use the node local storage `$SNIC_TMP` for intermediate computations.
 
 ```bash
-nextflow run -c <parameter.config> -profile uppmax GroundB/RepeatDefeaters
+nextflow run \
+    -params-file params.yml \
+    [-c <custom.config>] \
+    -profile uppmax \
+    GroundB/RepeatDefeaters
 ```
 
 The command above supplies custom configuration using the `-c` option, selects the
@@ -209,8 +217,7 @@ from https://github.com/GroundB/RepeatDefeaters.
 
 In order to submit to slurm, a SNIC project allocation must be provided.
 This can be provided using the workflow parameter `project`.
-E.g., `project = snic20xx-yy-zz` in the `params` block of the
-configuration file, or `--project snic20xx-xx-zz` on the command line.
+E.g., `project: snic20xx-yy-zz` in the `params.yml` file, or `--project snic20xx-xx-zz` on the command line.
 
 On Uppmax systems, Nextflow needs to be loaded using either the module
 system:
