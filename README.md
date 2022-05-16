@@ -216,7 +216,7 @@ On Uppmax systems, Nextflow needs to be loaded using either the module
 system:
 
 ```bash
-module load bioinfo-tools NextFlow
+module load bioinfo-tools Nextflow
 export NXF_HOME=/proj/<snic_compute_allocation>/nextflow
 ```
 
