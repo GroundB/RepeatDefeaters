@@ -15,6 +15,12 @@ process RENAME_SEQUENCES {
 
     script:
     """
+    if ! grep -c "#unknown" $fasta; then
+        echo "Key word #unknown not found."
+        echo "Please check your output is from RepeatModeler2."
+        exit 1
+    fi
+
     renameRMDLconsensi.pl $fasta $sci_name ${sci_name}.fasta
 
     cat <<-END_VERSIONS > versions.yml
