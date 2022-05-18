@@ -15,8 +15,8 @@ process RENAME_SEQUENCES {
 
     script:
     """
-    if ! grep -c "#unknown" $fasta; then
-        echo "Key word #unknown not found."
+    if ! grep -c "#Unknown" $fasta; then
+        echo "Key word #Unknown not found."
         echo "Please check your output is from RepeatModeler2."
         exit 1
     fi
